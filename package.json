@@ -1,0 +1,28 @@
+{
+  "name": "ecommerce-bd",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run start:dev --workspace=apps/backend",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace=apps/backend",
+    "build:frontend": "npm run build --workspace=apps/frontend",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "keywords": [
+    "ecommerce",
+    "bangladesh",
+    "nextjs",
+    "nestjs",
+    "prisma",
+    "zustand"
+  ],
+  "author": "",
+  "license": "ISC"
+}

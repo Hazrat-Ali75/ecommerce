@@ -1,0 +1,373 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  STRIPE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum DeliveryZone {
+  INSIDE_DHAKA
+  OUTSIDE_DHAKA
+}
+
+enum CategoryType {
+  FASHION
+  FOOTWEAR
+  ELECTRONICS
+}
+
+model User {
+  id              String               @id @default(cuid())
+  email           String               @unique
+  passwordHash    String
+  name            String
+  phone           String?
+  role            Role                 @default(CUSTOMER)
+  avatarUrl       String?
+  isActive        Boolean              @default(true)
+  isEmailVerified Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  refreshTokens   RefreshToken[]
+  resetTokens     PasswordResetToken[]
+  addresses       Address[]
+  cart            Cart?
+  wishlist        Wishlist?
+  orders          Order[]
+  reviews         Review[]
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  userId      String
+  tokenHash   String   @unique
+  deviceInfo  String?
+  isRevoked   Boolean  @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id          String   @id @default(cuid())
+  userId      String
+  tokenHash   String   @unique
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Address {
+  id            String       @id @default(cuid())
+  userId        String
+  fullName      String
+  phone         String
+  deliveryZone  DeliveryZone @default(INSIDE_DHAKA)
+  division      String       // Dhaka, Chittagong, Sylhet, Rajshahi, etc.
+  district      String       // District name (64 districts)
+  thana         String?      // Upazila / Thana
+  streetAddress String
+  postalCode    String?
+  isDefault     Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ------------------------------------
+// Shopping Cart Models
+// ------------------------------------
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id         String          @id @default(cuid())
+  cartId     String
+  productId  String
+  variantId  String?
+  quantity   Int             @default(1)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  cart       Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product    Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant    ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@unique([cartId, productId, variantId])
+  @@index([cartId])
+  @@index([productId])
+}
+
+// ------------------------------------
+// Wishlist Models
+// ------------------------------------
+model Wishlist {
+  id        String         @id @default(cuid())
+  userId    String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     WishlistItem[]
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlistId String
+  productId  String
+  createdAt  DateTime @default(now())
+
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([wishlistId, productId])
+  @@index([wishlistId])
+  @@index([productId])
+}
+
+// ------------------------------------
+// Catalog Models
+// ------------------------------------
+model Category {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  imageUrl    String?
+  type        CategoryType
+  parentId    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  parent      Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[]    @relation("CategoryHierarchy")
+  products    Product[]
+
+  @@index([slug])
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String           @unique
+  description      String
+  shortDescription String?
+  basePrice        Decimal          @db.Decimal(10, 2)
+  discountPrice    Decimal?         @db.Decimal(10, 2)
+  brand            String
+  skuPrefix        String           @unique
+  isFeatured       Boolean          @default(false)
+  isActive         Boolean          @default(true)
+  categoryId       String
+  tags             String[]         @default([])
+  viewsCount       Int              @default(0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  category         Category         @relation(fields: [categoryId], references: [id])
+  images           ProductImage[]
+  variants         ProductVariant[]
+  cartItems        CartItem[]
+  wishlistItems    WishlistItem[]
+  reviews          Review[]
+  orderItems       OrderItem[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([brand])
+}
+
+model ProductImage {
+  id         String   @id @default(cuid())
+  productId  String
+  url        String
+  publicId   String
+  altText    String?
+  isPrimary  Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id             String      @id @default(cuid())
+  productId      String
+  sku            String      @unique
+  price          Decimal     @db.Decimal(10, 2)
+  discountPrice  Decimal?    @db.Decimal(10, 2)
+  stockQuantity  Int         @default(0)
+  imageUrl       String?
+  attributes     Json        // e.g. { "gender": "men", "size": "xl" }
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+
+  @@index([productId])
+  @@index([sku])
+}
+
+// ------------------------------------
+// Order & Tracking Models
+// ------------------------------------
+model Order {
+  id                    String               @id @default(cuid())
+  orderNumber           String               @unique // e.g., BD-260903-8942
+  userId                String?
+  customerName          String
+  customerPhone         String
+  customerEmail         String
+  deliveryZone          DeliveryZone
+  shippingAddress       Json
+  subtotal              Decimal              @db.Decimal(10, 2)
+  deliveryFee           Decimal              @db.Decimal(10, 2) // ৳60 Inside Dhaka, ৳120 Outside
+  discount              Decimal              @default(0) @db.Decimal(10, 2)
+  totalAmount           Decimal              @db.Decimal(10, 2)
+  paymentMethod         PaymentMethod
+  paymentStatus         PaymentStatus        @default(PENDING)
+  orderStatus           OrderStatus          @default(PENDING)
+  trackingNumber        String?
+  notes                 String?
+  stripeSessionId       String?
+  stripePaymentIntentId String?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  user                  User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items                 OrderItem[]
+  statusHistory         OrderStatusHistory[]
+
+  @@index([orderNumber])
+  @@index([userId])
+  @@index([customerPhone])
+  @@index([orderStatus])
+}
+
+model OrderItem {
+  id                   String          @id @default(cuid())
+  orderId              String
+  productId            String
+  variantId            String?
+  productTitleSnapshot String
+  variantInfoSnapshot  Json?
+  skuSnapshot          String
+  unitPrice            Decimal         @db.Decimal(10, 2)
+  quantity             Int
+  totalPrice           Decimal         @db.Decimal(10, 2)
+
+  order                Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product              Product         @relation(fields: [productId], references: [id])
+  variant              ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
+}
+
+model OrderStatusHistory {
+  id          String      @id @default(cuid())
+  orderId     String
+  status      OrderStatus
+  note        String?
+  updatedBy   String?
+  createdAt   DateTime    @default(now())
+
+  order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  productId   String
+  userId      String
+  rating      Int      // 1 to 5
+  comment     String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+}
+
+model Banner {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  badgeText   String?
+  imageUrl    String
+  linkUrl     String
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+model Setting {
+  id                      String   @id @default(cuid())
+  deliveryFeeInsideDhaka  Decimal  @default(60.00) @db.Decimal(10, 2)
+  deliveryFeeOutsideDhaka Decimal  @default(120.00) @db.Decimal(10, 2)
+  storePhone              String   @default("+8801700000000")
+  storeEmail              String   @default("support@ecommerce-bd.com")
+  updatedAt               DateTime @updatedAt
+}
