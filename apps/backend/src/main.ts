@@ -12,7 +12,8 @@ async function bootstrap() {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
   // Security & Middleware
-  app.use(cookieParser());
+  const cookieMiddleware = typeof cookieParser === 'function' ? cookieParser : (cookieParser as { default: typeof cookieParser }).default;
+  app.use(cookieMiddleware());
   app.enableCors({
     origin: [frontendUrl, 'http://localhost:3000'],
     credentials: true,
