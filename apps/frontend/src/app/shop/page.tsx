@@ -19,6 +19,8 @@ import {
   Flame,
   SlidersHorizontal,
   Layers,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 interface ProductItem {
@@ -152,10 +154,19 @@ function ShopContent() {
         params.delete(key);
       }
     });
-    params.set("page", "1");
+
+    // Only reset page to 1 if we are updating filters/sorting and NOT changing page directly
+    if (!("page" in updates)) {
+      params.set("page", "1");
+    }
+
     startTransition(() => {
       router.push(`/shop?${params.toString()}`);
     });
+
+    if ("page" in updates) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleApplyPrice = (e: React.FormEvent) => {
@@ -631,25 +642,59 @@ function ShopContent() {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Responsive Pagination with Prev/Next & Counter */}
             {data.pagination.totalPages > 1 && (
-              <div className="mt-10 sm:mt-14 flex items-center justify-center gap-1.5 sm:gap-2">
-                {[...Array(data.pagination.totalPages)].map((_, idx) => {
-                  const pageNum = idx + 1;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => updateParam({ page: pageNum.toString() })}
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all ${
-                        currentPage === pageNum
-                          ? "bg-primary text-white shadow-md shadow-primary/25 scale-105"
-                          : "bg-white border text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
+              <div className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-100 pt-6">
+                <p className="text-xs text-gray-500 order-2 sm:order-1 font-medium">
+                  Showing <span className="font-bold text-gray-900">{(currentPage - 1) * data.pagination.limit + 1}</span>–
+                  <span className="font-bold text-gray-900">
+                    {Math.min(currentPage * data.pagination.limit, data.pagination.total)}
+                  </span>{" "}
+                  of <span className="font-bold text-gray-900">{data.pagination.total}</span> products
+                </p>
+
+                <div className="flex items-center gap-1.5 sm:gap-2 order-1 sm:order-2">
+                  {/* Previous Button */}
+                  <button
+                    type="button"
+                    onClick={() => updateParam({ page: (currentPage - 1).toString() })}
+                    disabled={currentPage <= 1}
+                    className="flex items-center gap-1 px-3 py-2 rounded-xl sm:rounded-2xl border bg-white text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="hidden sm:inline">Prev</span>
+                  </button>
+
+                  {/* Page Numbers */}
+                  {[...Array(data.pagination.totalPages)].map((_, idx) => {
+                    const pageNum = idx + 1;
+                    return (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => updateParam({ page: pageNum.toString() })}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+                          currentPage === pageNum
+                            ? "bg-primary text-white shadow-md shadow-primary/25 scale-105"
+                            : "bg-white border text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  {/* Next Button */}
+                  <button
+                    type="button"
+                    onClick={() => updateParam({ page: (currentPage + 1).toString() })}
+                    disabled={currentPage >= data.pagination.totalPages}
+                    className="flex items-center gap-1 px-3 py-2 rounded-xl sm:rounded-2xl border bg-white text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    <span className="hidden sm:inline">Next</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
           </div>

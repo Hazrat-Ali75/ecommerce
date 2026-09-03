@@ -82,15 +82,6 @@ export function Header() {
                 <Compass className="w-4 h-4 text-primary" />
                 Shop All
               </Link>
-
-              {/* Featured Spotlight Link */}
-              <Link
-                href="/featured"
-                className="hidden lg:inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-800 hover:text-amber-900 transition-colors py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/70 border border-amber-200/60"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                Featured
-              </Link>
             </div>
 
             {/* Centered Search Bar (Desktop & Tablet) */}
@@ -108,7 +99,7 @@ export function Header() {
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlistItems.length > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-secondary text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ring-2 ring-white">
                     {wishlistItems.length}
                   </span>
                 )}
@@ -122,7 +113,7 @@ export function Header() {
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && totalItems() > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-primary text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ring-2 ring-white">
                     {totalItems()}
                   </span>
                 )}
@@ -260,28 +251,16 @@ export function Header() {
                   </Link>
 
                   <Link
-                    href="/featured"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-amber-50/60 text-sm font-bold text-amber-900 bg-amber-50/40 border border-amber-200/50"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Sparkles className="w-5 h-5 text-amber-600" />
-                      <span>Featured Spotlight</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-amber-500/70" />
-                  </Link>
-
-                  <Link
                     href="/wishlist"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 text-sm font-bold text-gray-800"
                   >
                     <div className="flex items-center gap-3">
-                      <Heart className="w-5 h-5 text-secondary" />
+                      <Heart className="w-5 h-5 text-rose-500" />
                       <span>Saved Wishlist</span>
                     </div>
-                    <span className="text-xs font-bold text-gray-400">
-                      ({mounted ? wishlistItems.length : 0})
+                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                      {mounted ? wishlistItems.length : 0}
                     </span>
                   </Link>
 

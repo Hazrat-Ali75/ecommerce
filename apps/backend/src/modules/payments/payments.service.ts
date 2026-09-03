@@ -134,7 +134,10 @@ export class PaymentsService {
 
       if (orderId) {
         await this.prisma.$transaction(async (tx) => {
-          const order = await tx.order.findUnique({ where: { id: orderId } });
+          const order = await tx.order.findUnique({
+            where: { id: orderId },
+            include: { items: true },
+          });
           if (!order) return;
 
           await tx.order.update({
@@ -160,13 +163,25 @@ export class PaymentsService {
 
           // Dispatch confirmation email
           this.mailService
-            .sendOrderConfirmationEmail(
-              order.customerEmail,
-              order.orderNumber,
-              Number(order.totalAmount),
-              'Stripe Online Payment',
-              order.customerName
-            )
+            .sendOrderConfirmationEmail({
+              to: order.customerEmail,
+              orderNumber: order.orderNumber,
+              totalAmount: Number(order.totalAmount),
+              paymentMethod: 'Stripe Online Payment',
+              customerName: order.customerName,
+              customerPhone: order.customerPhone,
+              deliveryZone: order.deliveryZone,
+              deliveryFee: Number(order.deliveryFee),
+              subtotal: Number(order.subtotal),
+              shippingAddress: order.shippingAddress,
+              items: order.items.map((it) => ({
+                productTitleSnapshot: it.productTitleSnapshot,
+                variantInfoSnapshot: it.variantInfoSnapshot as Record<string, any> | null,
+                unitPrice: Number(it.unitPrice),
+                quantity: it.quantity,
+                totalPrice: Number(it.totalPrice),
+              })),
+            })
             .catch((e) => this.logger.error('Failed to send confirmation email', e));
         });
 

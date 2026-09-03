@@ -222,13 +222,35 @@ export class OrdersService {
     // Send confirmation email for COD immediately
     if (order.paymentMethod === PaymentMethod.CASH_ON_DELIVERY) {
       this.mailService
-        .sendOrderConfirmationEmail(
-          order.customerEmail,
-          order.orderNumber,
-          Number(order.totalAmount),
-          'Cash on Delivery (COD)',
-          order.customerName
-        )
+        .sendOrderConfirmationEmail({
+          to: order.customerEmail,
+          orderNumber: order.orderNumber,
+          totalAmount: Number(order.totalAmount),
+          paymentMethod: 'Cash on Delivery (COD)',
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          deliveryZone: order.deliveryZone,
+          deliveryFee: Number(order.deliveryFee),
+          subtotal: Number(order.subtotal),
+          shippingAddress: order.shippingAddress,
+          items: Array.isArray(order.items)
+            ? order.items.map((it) => ({
+                productTitleSnapshot: it.productTitleSnapshot,
+                variantInfoSnapshot: it.variantInfoSnapshot as Record<string, any> | null,
+                unitPrice: Number(it.unitPrice),
+                quantity: it.quantity,
+                totalPrice: Number(it.totalPrice),
+              }))
+            : Array.isArray((order.items as any)?.create)
+              ? (order.items as any).create.map((it: any) => ({
+                  productTitleSnapshot: it.productTitleSnapshot,
+                  variantInfoSnapshot: it.variantInfoSnapshot as Record<string, any> | null,
+                  unitPrice: Number(it.unitPrice),
+                  quantity: it.quantity,
+                  totalPrice: Number(it.totalPrice),
+                }))
+              : [],
+        })
         .catch((err) => this.logger.error('Error dispatching confirmation email', err));
     }
 
@@ -473,7 +495,9 @@ export class OrdersService {
           order.customerEmail,
           order.orderNumber,
           newStatus,
-          dto.trackingNumber || order.trackingNumber || undefined
+          dto.trackingNumber || order.trackingNumber || undefined,
+          order.customerName,
+          dto.note
         )
         .catch((err) => this.logger.error('Failed to send status update email', err));
 
