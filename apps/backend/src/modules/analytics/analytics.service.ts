@@ -80,11 +80,11 @@ export class AnalyticsService {
         where: { deliveryZone: DeliveryZone.OUTSIDE_DHAKA },
       }),
 
-      // 10. Orders in the last 14 days for timeline chart
+      // 10. Orders in the last 14 days for timeline chart (using 15-day window for timezone safety)
       this.prisma.order.findMany({
         where: {
           createdAt: {
-            gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+            gte: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
           },
           orderStatus: { not: OrderStatus.CANCELLED },
         },
@@ -149,17 +149,26 @@ export class AnalyticsService {
       ordersByStatus[item.orderStatus] = item._count.id;
     });
 
-    // Format 14-day daily revenue map
+    // Format 14-day daily revenue map in Asia/Dhaka timezone
+    const formatDhakaDate = (d: Date): string => {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Dhaka',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(d);
+    };
+
     const dailyMap = new Map<string, { revenue: number; count: number }>();
     const now = new Date();
     for (let i = 13; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = formatDhakaDate(d);
       dailyMap.set(dateStr, { revenue: 0, count: 0 });
     }
 
     completedOrders.forEach((ord) => {
-      const dateStr = ord.createdAt.toISOString().split('T')[0];
+      const dateStr = formatDhakaDate(ord.createdAt);
       if (dailyMap.has(dateStr)) {
         const entry = dailyMap.get(dateStr)!;
         entry.revenue += Number(ord.totalAmount);

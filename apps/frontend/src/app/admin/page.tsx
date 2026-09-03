@@ -208,35 +208,59 @@ export default function AdminDashboardPage() {
               <h3 className="text-sm font-bold text-gray-900">14-Day Revenue Trend</h3>
               <p className="text-xs text-gray-500">Daily sales revenue in Bangladeshi Taka (৳)</p>
             </div>
-            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
-              Last 14 Days
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100/80 px-2.5 py-1 rounded-lg">
+                Last 14 Days
+              </span>
+            </div>
           </div>
 
-          <div className="h-44 flex items-end gap-1.5 pt-4">
-            {data.dailyRevenue.map((d) => {
-              const heightPct = Math.max(8, Math.round((d.revenue / maxDailyRevenue) * 100));
-              const dayLabel = d.date.split("-").slice(1).join("/");
-              return (
-                <div key={d.date} className="flex-1 flex flex-col items-center gap-1 group relative">
-                  {/* Tooltip */}
-                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-[10px] py-1 px-2 rounded pointer-events-none whitespace-nowrap z-10">
-                    {d.date}: {formatBDT(d.revenue)} ({d.ordersCount} orders)
-                  </div>
-                  {/* Bar */}
+          {(!data.dailyRevenue || data.dailyRevenue.length === 0) ? (
+            <div className="h-48 flex items-center justify-center text-xs text-gray-400">
+              No revenue history available for the last 14 days
+            </div>
+          ) : (
+            <div className="h-48 flex items-stretch gap-1 sm:gap-2 pt-8 pb-1">
+              {data.dailyRevenue.map((d) => {
+                const heightPct =
+                  d.revenue > 0
+                    ? Math.max(12, Math.round((d.revenue / maxDailyRevenue) * 100))
+                    : 6;
+                const dayLabel = d.date.split("-").slice(1).join("/");
+                return (
                   <div
-                    style={{ height: `${heightPct}%` }}
-                    className={`w-full rounded-t-md transition-all ${
-                      d.revenue > 0 ? "bg-emerald-600 group-hover:bg-emerald-500" : "bg-gray-100"
-                    }`}
-                  />
-                  <span className="text-[9px] text-gray-400 truncate w-full text-center">
-                    {dayLabel}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                    key={d.date}
+                    className="h-full flex-1 flex flex-col items-center group relative min-w-0"
+                  >
+                    {/* Tooltip */}
+                    <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-[11px] py-1 px-2.5 rounded-lg pointer-events-none whitespace-nowrap z-20 shadow-lg font-medium">
+                      <span className="font-bold">{d.date}:</span> {formatBDT(d.revenue)}
+                      <span className="text-gray-300 ml-1 font-normal">
+                        ({d.ordersCount} {d.ordersCount === 1 ? "order" : "orders"})
+                      </span>
+                    </div>
+
+                    {/* Bar track container */}
+                    <div className="w-full flex-1 flex items-end justify-center">
+                      <div
+                        style={{ height: `${heightPct}%` }}
+                        className={`w-full max-w-[28px] rounded-t-md transition-all duration-300 ${
+                          d.revenue > 0
+                            ? "bg-emerald-600 group-hover:bg-emerald-500 shadow-xs"
+                            : "bg-gray-100 group-hover:bg-gray-200"
+                        }`}
+                      />
+                    </div>
+
+                    {/* Date Label */}
+                    <span className="text-[10px] text-gray-400 group-hover:text-gray-700 font-medium truncate w-full text-center mt-2 shrink-0">
+                      {dayLabel}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Logistics & Delivery Distribution */}

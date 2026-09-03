@@ -108,5 +108,16 @@ describe('AnalyticsService (Admin KPI Aggregations)', () => {
     expect(summary.recentOrders[0].orderNumber).toBe('BD-2026-0001');
     expect(summary.topProducts).toHaveLength(1);
     expect(summary.topProducts[0].title).toBe('Panjabi');
+    expect(summary.dailyRevenue).toHaveLength(14);
+    const todayDhakaStr = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Dhaka',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+    const todayRevenueItem = summary.dailyRevenue.find((d) => d.date === todayDhakaStr);
+    expect(todayRevenueItem).toBeDefined();
+    expect(todayRevenueItem?.revenue).toBe(3400);
+    expect(todayRevenueItem?.ordersCount).toBe(1);
   });
 });
