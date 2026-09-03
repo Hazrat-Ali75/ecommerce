@@ -25,7 +25,7 @@ import { Public } from '../../common/decorators/public.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, CategoryType } from '@prisma/client';
 
 @Controller('products')
 export class ProductsController {
@@ -51,11 +51,12 @@ export class ProductsController {
   async getAdminProducts(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
-    @Query('search') search?: string
+    @Query('search') search?: string,
+    @Query('categoryType') categoryType?: CategoryType
   ) {
     const pageNum = page ? parseInt(page, 10) : 1;
-    const limitNum = limit ? parseInt(limit, 10) : 20;
-    return this.productsService.getAdminProducts(pageNum, limitNum, search);
+    const limitNum = limit ? parseInt(limit, 10) : 15;
+    return this.productsService.getAdminProducts(pageNum, limitNum, search, categoryType);
   }
 
   /**

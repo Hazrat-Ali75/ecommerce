@@ -12,6 +12,7 @@ import { CartModule } from './modules/cart/cart.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     WishlistModule,
     OrdersModule,
     PaymentsModule,
+    AnalyticsModule,
   ],
   controllers: [],
   providers: [],

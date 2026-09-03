@@ -120,7 +120,7 @@ export function validateVariantAttributes(
 
 export const ProductImageInputSchema = z.object({
   url: z.string().url('Must be a valid image URL'),
-  publicId: z.string().min(1, 'Cloudinary publicId is required'),
+  publicId: z.string().optional().default(''),
   altText: z.string().optional(),
   isPrimary: z.boolean().default(false),
   sortOrder: z.number().int().default(0),
@@ -148,14 +148,15 @@ export const CreateProductSchema = z.object({
   slug: z
     .string()
     .min(3, 'Slug must be at least 3 characters')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens')
+    .optional(),
+  description: z.string().optional().default('Authentic product with official warranty.'),
   shortDescription: z.string().optional(),
   basePrice: z.number().positive('Base price must be greater than 0'),
   discountPrice: z.number().positive().optional().nullable(),
   brand: z.string().min(2, 'Brand is required'),
-  skuPrefix: z.string().min(2, 'SKU prefix is required'),
-  categoryId: z.string().cuid('Valid categoryId is required'),
+  skuPrefix: z.string().optional(),
+  categoryId: z.string().min(1, 'Valid categoryId is required'),
   isFeatured: z.boolean().default(false),
   isActive: z.boolean().default(true),
   tags: z.array(z.string()).default([]),

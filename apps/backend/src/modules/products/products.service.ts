@@ -12,7 +12,7 @@ import {
   GetProductsQueryDto,
   validateVariantAttributes,
 } from './dto/product.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, CategoryType } from '@prisma/client';
 
 @Injectable()
 export class ProductsService {
@@ -259,18 +259,36 @@ export class ProductsService {
       }
     }
 
+    // Auto-generate slug and skuPrefix if not explicitly provided
+    const baseSlug = (dto.slug && dto.slug.trim())
+      ? dto.slug.trim()
+      : dto.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    const finalSlug = dto.slug ? dto.slug.trim() : `${baseSlug}-${rand}`;
+
+    const finalSkuPrefix = (dto.skuPrefix && dto.skuPrefix.trim())
+      ? dto.skuPrefix.trim().toUpperCase()
+      : `${dto.brand.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+
+    const finalDescription = (dto.description && dto.description.trim())
+      ? dto.description.trim()
+      : 'Authentic Bangladeshi marketplace product with official warranty.';
+
     // Create in a database transaction
     return this.prisma.$transaction(async (tx) => {
       const product = await tx.product.create({
         data: {
           title: dto.title.trim(),
-          slug: dto.slug.trim(),
-          description: dto.description.trim(),
+          slug: finalSlug,
+          description: finalDescription,
           shortDescription: dto.shortDescription?.trim() || null,
           basePrice: dto.basePrice,
           discountPrice: dto.discountPrice || null,
           brand: dto.brand.trim(),
-          skuPrefix: dto.skuPrefix.trim(),
+          skuPrefix: finalSkuPrefix,
           categoryId: dto.categoryId,
           isFeatured: dto.isFeatured ?? false,
           isActive: dto.isActive ?? true,
@@ -284,7 +302,7 @@ export class ProductsService {
           data: dto.images.map((img, index) => ({
             productId: product.id,
             url: img.url,
-            publicId: img.publicId,
+            publicId: img.publicId || `img_${Date.now()}_${index}`,
             altText: img.altText || product.title,
             isPrimary: img.isPrimary ?? index === 0,
             sortOrder: img.sortOrder ?? index,
@@ -426,18 +444,24 @@ export class ProductsService {
   /**
    * Admin paginated product list
    */
-  async getAdminProducts(page: number = 1, limit: number = 20, search?: string) {
+  async getAdminProducts(
+    page: number = 1,
+    limit: number = 15,
+    search?: string,
+    categoryType?: CategoryType
+  ) {
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductWhereInput = search
-      ? {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { brand: { contains: search, mode: 'insensitive' } },
-            { skuPrefix: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+    const where: Prisma.ProductWhereInput = {
+      ...(categoryType && { category: { type: categoryType } }),
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { brand: { contains: search, mode: 'insensitive' } },
+          { skuPrefix: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+    };
 
     const [products, total] = await Promise.all([
       this.prisma.product.findMany({
@@ -446,9 +470,13 @@ export class ProductsService {
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: {
-          category: { select: { id: true, name: true, slug: true } },
+          category: { select: { id: true, name: true, slug: true, type: true } },
+          images: {
+            select: { id: true, url: true, isPrimary: true, sortOrder: true },
+            orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }],
+          },
           variants: {
-            select: { id: true, sku: true, stockQuantity: true, price: true },
+            select: { id: true, sku: true, stockQuantity: true, price: true, attributes: true },
           },
           _count: {
             select: { orderItems: true, reviews: true },
