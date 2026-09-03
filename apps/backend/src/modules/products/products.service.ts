@@ -126,6 +126,9 @@ export class ProductsService {
       case 'popular':
         orderBy = { viewsCount: 'desc' };
         break;
+      case 'oldest':
+        orderBy = { createdAt: 'asc' };
+        break;
       case 'newest':
       default:
         orderBy = { createdAt: 'desc' };

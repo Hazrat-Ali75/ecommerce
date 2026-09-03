@@ -59,17 +59,17 @@ export class OrdersController {
 
   /**
    * Order Placement (Checkout):
-   * Supports authenticated users and guest checkout with phone number.
-   * Atomically decrements stock.
+   * Requires authenticated customer.
+   * Atomically decrements stock and creates order.
    */
-  @Public()
+  @UseGuards(JwtAuthGuard)
   @Post('checkout')
   @HttpCode(HttpStatus.CREATED)
   async checkout(
-    @CurrentUser() user: CurrentUserPayload | null,
+    @CurrentUser() user: CurrentUserPayload,
     @Body(new ZodValidationPipe(CheckoutSchema)) dto: CheckoutDto
   ) {
-    return this.ordersService.createOrder(user?.id, dto);
+    return this.ordersService.createOrder(user.id, dto);
   }
 
   /**

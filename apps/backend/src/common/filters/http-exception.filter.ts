@@ -34,7 +34,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     } else if (exception instanceof Error) {
       this.logger.error(`Unhandled Exception: ${exception.message}`, exception.stack);
-      message = exception.message;
+
+      // Handle Prisma Unique Constraint Errors (P2002) gracefully
+      const isPrismaUnique = (exception as { code?: string }).code === 'P2002';
+      if (isPrismaUnique) {
+        status = HttpStatus.CONFLICT;
+        message = 'An account or record with this information already exists.';
+      } else {
+        // Guard against leaking raw SQL, database schema names, or stack traces
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        message = 'An unexpected error occurred. Please try again shortly.';
+      }
     }
 
     response.status(status).json({

@@ -183,7 +183,7 @@ export const GetProductsQuerySchema = z.object({
   maxPrice: z.coerce.number().positive().optional(),
   search: z.string().optional(),
   isFeatured: z.coerce.boolean().optional(),
-  sort: z.enum(['newest', 'price-asc', 'price-desc', 'rating', 'popular']).default('newest'),
+  sort: z.enum(['newest', 'oldest', 'price-asc', 'price-desc', 'rating', 'popular']).default('newest'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(12),
 });

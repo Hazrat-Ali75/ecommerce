@@ -1,76 +1,190 @@
-import { formatBDT } from "@/lib/currency";
-import { ShoppingBag, Truck, ShieldCheck, Zap } from "lucide-react";
+import Link from "next/link";
+import { HeroCarousel } from "@/components/home/hero-carousel";
+import { CategoryGrid } from "@/components/home/category-grid";
+import { TrustSignals } from "@/components/home/trust-signals";
+import { ProductCard } from "@/components/products/product-card";
+import { ArrowRight, Sparkles, Zap, ShieldCheck, Flame } from "lucide-react";
 
-export default function Home() {
+interface ProductItem {
+  id: string;
+  title: string;
+  slug: string;
+  brand: string;
+  basePrice: number;
+  discountPrice: number | null;
+  category: { id: string; name: string; slug: string; type: string };
+  images: Array<{ url: string; isPrimary: boolean }>;
+  variants: Array<{ stockQuantity: number }>;
+}
+async function getHomeData() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+  try {
+    const [fashionRes, footwearRes, electronicsRes, bannersRes] = await Promise.allSettled([
+      fetch(`${apiUrl}/products?categorySlug=fashion-apparel&limit=4`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/products?categorySlug=footwear-sneakers&limit=4`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/products?categorySlug=electronics-gadgets&limit=4`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/banners`, { next: { revalidate: 300 } }),
+    ]);
+
+    const fashion = fashionRes.status === "fulfilled" && fashionRes.value.ok ? await fashionRes.value.json() : null;
+    const footwear = footwearRes.status === "fulfilled" && footwearRes.value.ok ? await footwearRes.value.json() : null;
+    const electronics = electronicsRes.status === "fulfilled" && electronicsRes.value.ok ? await electronicsRes.value.json() : null;
+    const banners = bannersRes.status === "fulfilled" && bannersRes.value.ok ? await bannersRes.value.json() : null;
+
+    return {
+      fashionProducts: fashion?.products || [],
+      footwearProducts: footwear?.products || [],
+      electronicsProducts: electronics?.products || [],
+      banners: banners || [],
+    };
+  } catch {
+    return {
+      fashionProducts: [],
+      footwearProducts: [],
+      electronicsProducts: [],
+      banners: [],
+    };
+  }
+}
+
+export default async function HomePage() {
+  const { fashionProducts, footwearProducts, electronicsProducts, banners } = await getHomeData();
+
   return (
-    <main className="min-h-screen bg-slate-50">
-      {/* Top Banner Ticker */}
-      <div className="bg-emerald-800 text-white text-xs font-medium py-2 px-4 text-center">
-        ⚡ Free Delivery inside Dhaka on orders over {formatBDT(2000)} | Cash on Delivery Available Across All 64 Districts
+    <div className="w-full space-y-12 pb-16">
+      {/* 1. FULL WIDTH HERO CAROUSEL */}
+      <section className="w-full overflow-hidden">
+        <HeroCarousel initialBanners={banners.length > 0 ? banners : undefined} />
+      </section>
+
+      {/* CONSTRAINED CONTAINER FOR CONTENT SECTIONS */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        {/* 2. TRUST SIGNALS (BANGLADESHI MARKET INVARIANTS) */}
+        <TrustSignals />
+
+      {/* 3. CATEGORY SHOWCASE CARDS */}
+      <CategoryGrid />
+
+      {/* 4. FEATURED BANGLADESHI FASHION */}
+      {fashionProducts.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-1">
+                <Sparkles className="w-4 h-4" />
+                <span>Festive & Everyday Style</span>
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+                Authentic Bangladeshi Fashion
+              </h2>
+            </div>
+            <Link
+              href="/shop?category=fashion-apparel"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:underline"
+            >
+              Explore Collection
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            {fashionProducts.map((p: ProductItem) => (
+              <ProductCard key={p.id} {...p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 5. TRENDING FOOTWEAR & SNEAKERS */}
+      {footwearProducts.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                <Flame className="w-4 h-4" />
+                <span>Sizes 5 to 10 in Stock</span>
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+                Trending Footwear & Sneakers
+              </h2>
+            </div>
+            <Link
+              href="/shop?category=footwear-sneakers"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:underline"
+            >
+              Browse All Shoes
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            {footwearProducts.map((p: ProductItem) => (
+              <ProductCard key={p.id} {...p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 6. SMART ELECTRONICS & GADGETS */}
+      {electronicsProducts.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 mb-1">
+                <Zap className="w-4 h-4" />
+                <span>Fast Charging & Smart Wearables</span>
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+                Electronics & Smart Gadgets
+              </h2>
+            </div>
+            <Link
+              href="/shop?category=electronics-gadgets"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:underline"
+            >
+              View All Gadgets
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            {electronicsProducts.map((p: ProductItem) => (
+              <ProductCard key={p.id} {...p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 7. BANGLADESH LOGISTICS & ORDER TRACKING BANNER */}
+      <section className="bg-primary text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-secondary">
+            Nationwide Reliable Delivery
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black leading-tight">
+            Delivering across all 64 districts in Bangladesh
+          </h2>
+          <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+            Inside Dhaka ৳60 (24–48 hours) • Outside Dhaka ৳120 (3–5 days). Track your order status in real time anytime using your order number.
+          </p>
+          <div className="pt-2 flex flex-wrap gap-3">
+            <Link
+              href="/track"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-primary text-xs sm:text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm"
+            >
+              Track Your Parcel
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-foreground/10 border border-white/20 text-white text-xs sm:text-sm font-semibold hover:bg-primary-foreground/20 transition-colors"
+            >
+              Start Shopping
+            </Link>
+          </div>
+        </div>
+      </section>
       </div>
-
-      {/* Hero Welcome Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-800 mb-6">
-          <Zap className="w-4 h-4 text-emerald-600" />
-          <span>Bangladeshi Multi-Category Marketplace</span>
-        </div>
-
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight">
-          Welcome to <span className="text-emerald-700">BanglaCart</span>
-        </h1>
-        <p className="mt-4 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto">
-          Shop authentic <strong>Fashion & Apparel</strong>, <strong>Footwear & Sneakers</strong>, and <strong>Electronics & Gadgets</strong> with Cash on Delivery nationwide.
-        </p>
-
-        {/* 3 Main Categories Preview Cards */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Category 01</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Fashion & Apparel</h3>
-            <p className="text-sm text-slate-500 mt-2">Men, Women & Kids collections with sizes S through XXL.</p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Category 02</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Footwear & Sneakers</h3>
-            <p className="text-sm text-slate-500 mt-2">Men, Women & Kids shoes with sizes 5 through 10.</p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Category 03</span>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">Electronics & Gadgets</h3>
-            <p className="text-sm text-slate-500 mt-2">Watches (Men & Women), Chargers, Power Banks, and Earbuds.</p>
-          </div>
-        </div>
-
-        {/* Value Prop Badges */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div className="p-4 rounded-xl bg-white border border-slate-100 flex flex-col items-center">
-            <Truck className="w-6 h-6 text-emerald-600 mb-2" />
-            <span className="text-sm font-semibold text-slate-800">Inside Dhaka {formatBDT(60)}</span>
-            <span className="text-xs text-slate-500">24–48 Hours Delivery</span>
-          </div>
-
-          <div className="p-4 rounded-xl bg-white border border-slate-100 flex flex-col items-center">
-            <Truck className="w-6 h-6 text-blue-600 mb-2" />
-            <span className="text-sm font-semibold text-slate-800">Outside Dhaka {formatBDT(120)}</span>
-            <span className="text-xs text-slate-500">All 64 Districts (3-5 Days)</span>
-          </div>
-
-          <div className="p-4 rounded-xl bg-white border border-slate-100 flex flex-col items-center">
-            <ShoppingBag className="w-6 h-6 text-purple-600 mb-2" />
-            <span className="text-sm font-semibold text-slate-800">Cash on Delivery</span>
-            <span className="text-xs text-slate-500">Pay at Your Doorstep</span>
-          </div>
-
-          <div className="p-4 rounded-xl bg-white border border-slate-100 flex flex-col items-center">
-            <ShieldCheck className="w-6 h-6 text-rose-600 mb-2" />
-            <span className="text-sm font-semibold text-slate-800">Stripe Instant Pay</span>
-            <span className="text-xs text-slate-500">Encrypted Card Checkout</span>
-          </div>
-        </div>
-      </div>
-    </main>
+    </div>
   );
 }
