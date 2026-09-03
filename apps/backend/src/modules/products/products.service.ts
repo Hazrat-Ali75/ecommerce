@@ -129,6 +129,9 @@ export class ProductsService {
       case 'oldest':
         orderBy = { createdAt: 'asc' };
         break;
+      case 'random':
+        // Shuffled after retrieval
+        break;
       case 'newest':
       default:
         orderBy = { createdAt: 'desc' };
@@ -166,6 +169,14 @@ export class ProductsService {
       this.prisma.product.count({ where }),
       this.getCategoryFacets(categorySlug || categoryId),
     ]);
+
+    // If random order requested, randomize product order using Fisher-Yates
+    if (sort === 'random' && products.length > 1) {
+      for (let i = products.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [products[i], products[j]] = [products[j], products[i]];
+      }
+    }
 
     return {
       products,

@@ -20,9 +20,9 @@ async function getHomeData() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
   try {
     const [fashionRes, footwearRes, electronicsRes, bannersRes] = await Promise.allSettled([
-      fetch(`${apiUrl}/products?categorySlug=fashion-apparel&limit=4`, { next: { revalidate: 60 } }),
-      fetch(`${apiUrl}/products?categorySlug=footwear-sneakers&limit=4`, { next: { revalidate: 60 } }),
-      fetch(`${apiUrl}/products?categorySlug=electronics-gadgets&limit=4`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/products?categorySlug=fashion-apparel&isFeatured=true&limit=8`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/products?categorySlug=footwear-sneakers&isFeatured=true&limit=8`, { next: { revalidate: 60 } }),
+      fetch(`${apiUrl}/products?categorySlug=electronics-gadgets&isFeatured=true&limit=8`, { next: { revalidate: 60 } }),
       fetch(`${apiUrl}/banners`, { next: { revalidate: 300 } }),
     ]);
 

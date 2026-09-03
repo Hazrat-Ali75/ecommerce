@@ -17,6 +17,7 @@ import {
   Compass,
   ChevronRight,
   Truck,
+  Sparkles,
 } from "lucide-react";
 
 export function Header() {
@@ -80,6 +81,15 @@ export function Header() {
               >
                 <Compass className="w-4 h-4 text-primary" />
                 Shop All
+              </Link>
+
+              {/* Featured Spotlight Link */}
+              <Link
+                href="/featured"
+                className="hidden lg:inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-800 hover:text-amber-900 transition-colors py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/70 border border-amber-200/60"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                Featured
               </Link>
             </div>
 
@@ -247,6 +257,18 @@ export function Header() {
                       <span>Browse All Products</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-400" />
+                  </Link>
+
+                  <Link
+                    href="/featured"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between p-3 rounded-xl hover:bg-amber-50/60 text-sm font-bold text-amber-900 bg-amber-50/40 border border-amber-200/50"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="w-5 h-5 text-amber-600" />
+                      <span>Featured Spotlight</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-amber-500/70" />
                   </Link>
 
                   <Link
