@@ -5,6 +5,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { MailModule } from './modules/mail/mail.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
+import { BannersModule } from './modules/banners/banners.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { MailModule } from './modules/mail/mail.module';
     AuthModule,
     UsersModule,
     UploadModule,
+    CategoriesModule,
+    ProductsModule,
+    BannersModule,
   ],
   controllers: [],
   providers: [],
