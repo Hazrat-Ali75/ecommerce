@@ -17,6 +17,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Image from "next/image";
+import { useAuthStore } from "@/store/auth-store";
 
 interface OrderTrackingData {
   orderNumber: string;
@@ -50,6 +51,8 @@ interface OrderTrackingData {
 function TrackOrderContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
 
   const urlOrderNumber = searchParams.get("orderNumber") || "";
   const [orderNumberInput, setOrderNumberInput] = useState(urlOrderNumber);
@@ -59,6 +62,17 @@ function TrackOrderContent() {
     orderNumber: urlOrderNumber,
     phone: "",
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated) {
+      const search = window.location.search;
+      router.replace(`/login?redirect=${encodeURIComponent("/track" + search)}`);
+    }
+  }, [mounted, isAuthenticated, router]);
 
   useEffect(() => {
     if (urlOrderNumber) {
@@ -123,6 +137,17 @@ function TrackOrderContent() {
 
   const currentStep = order ? getStepIndex(order.orderStatus) : -1;
   const isCancelled = order?.orderStatus === "CANCELLED";
+
+  if (!mounted || !isAuthenticated) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center p-4">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-semibold text-gray-600">Verifying customer credentials...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

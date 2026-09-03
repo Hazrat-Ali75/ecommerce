@@ -181,6 +181,18 @@ export function Header() {
                             <ChevronRight className="w-4 h-4 text-gray-400" />
                           </Link>
 
+                          <Link
+                            href="/track"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center justify-between p-2.5 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <Truck className="w-4 h-4 text-gray-400" />
+                              <span>Track Order</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                          </Link>
+
                           <button
                             onClick={() => {
                               setUserMenuOpen(false);
@@ -312,6 +324,17 @@ export function Header() {
                           <ChevronRight className="w-4 h-4 text-primary/60" />
                         </Link>
                       )}
+                      <Link
+                        href="/orders"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-gray-800 bg-gray-50 hover:bg-gray-100"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Package className="w-4 h-4 text-gray-500" />
+                          <span>My Orders</span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                      </Link>
                       <button
                         onClick={() => {
                           setMobileMenuOpen(false);

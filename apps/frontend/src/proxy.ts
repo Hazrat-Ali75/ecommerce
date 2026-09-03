@@ -16,12 +16,13 @@ export function proxy(request: NextRequest) {
 
   const isCheckoutRoute = pathname.startsWith("/checkout");
   const isOrdersRoute = pathname.startsWith("/orders");
+  const isTrackRoute = pathname.startsWith("/track");
   const isAdminRoute = pathname.startsWith("/admin");
 
-  // If attempting to access checkout, orders, or admin without authentication
-  if (!authToken && (isCheckoutRoute || isOrdersRoute || isAdminRoute)) {
+  // If attempting to access checkout, orders, track, or admin without authentication
+  if (!authToken && (isCheckoutRoute || isOrdersRoute || isTrackRoute || isAdminRoute)) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
+    loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -35,7 +36,7 @@ export function proxy(request: NextRequest) {
 
 // Next.js 16 Route Matcher
 export const config = {
-  matcher: ["/checkout/:path*", "/orders/:path*", "/admin/:path*"],
+  matcher: ["/checkout/:path*", "/orders/:path*", "/track/:path*", "/admin/:path*"],
 };
 
 // Aliased export for compatibility
