@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
@@ -16,7 +16,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
 
-  const { setAuth } = useAuthStore();
+  const { user, isAuthenticated, setAuth } = useAuthStore();
   const syncCart = useCartStore((state) => state.syncWithBackend);
   const syncWishlist = useWishlistStore((state) => state.syncWithBackend);
 
@@ -24,6 +24,39 @@ function LoginContent() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Helper to resolve safe destination URL
+  const getSafeRedirectUrl = (role?: string) => {
+    let target = "/";
+    const rawRedirect =
+      redirectUrl ||
+      (typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("redirect")
+        : null);
+
+    if (rawRedirect) {
+      try {
+        target = decodeURIComponent(rawRedirect);
+      } catch {
+        target = rawRedirect;
+      }
+    } else if (role === "ADMIN" || role === "SUPER_ADMIN") {
+      target = "/admin";
+    }
+
+    if (!target.startsWith("/") || target.startsWith("//")) {
+      target = "/";
+    }
+    return target;
+  };
+
+  // If already authenticated, automatically redirect to target
+  useEffect(() => {
+    if (isAuthenticated) {
+      const target = getSafeRedirectUrl(user?.role);
+      window.location.href = target;
+    }
+  }, [isAuthenticated, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,21 +68,20 @@ function LoginContent() {
     try {
       setLoading(true);
       const res = await apiClient.post("/auth/login", { email, password });
-      const { user, accessToken } = res.data;
+      const { user: loggedInUser, accessToken } = res.data;
 
-      setAuth(user, accessToken);
-      toast.success(`Welcome back to BanglaShop, ${user.name}!`);
+      setAuth(loggedInUser, accessToken);
+      toast.success(`Welcome back to BanglaShop, ${loggedInUser.name}!`);
 
       // Sync guest cart & wishlist with backend
-      await Promise.all([syncCart(), syncWishlist()]);
-
-      if (redirectUrl) {
-        router.push(redirectUrl);
-      } else if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
-        router.push("/admin");
-      } else {
-        router.push("/");
+      try {
+        await Promise.all([syncCart(), syncWishlist()]);
+      } catch {
+        // Continue even if background sync fails
       }
+
+      const target = getSafeRedirectUrl(loggedInUser.role);
+      window.location.href = target;
     } catch (err: unknown) {
       toast.error(
         getFriendlyErrorMessage(err, "Unable to sign in. Please verify your email and password.")

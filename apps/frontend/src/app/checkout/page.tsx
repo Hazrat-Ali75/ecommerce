@@ -39,17 +39,11 @@ export default function CheckoutPage() {
     removeCoupon,
     getDiscountAmount,
   } = useCartStore();
-  const { user, isAuthenticated, isLoading } = useAuthStore();
+  const { user, isAuthenticated, isLoading, hasHydrated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
 
   const [couponInput, setCouponInput] = useState("");
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast.info("Please sign in to proceed with checkout");
-      router.push("/login?redirect=/checkout");
-    }
-  }, [isAuthenticated, isLoading, router]);
 
   const [fullName, setFullName] = useState(user?.name || "");
   const [phone, setPhone] = useState(user?.phone || "");
@@ -61,6 +55,27 @@ export default function CheckoutPage() {
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"CASH_ON_DELIVERY" | "STRIPE">("CASH_ON_DELIVERY");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !hasHydrated) return;
+
+    if (!isLoading && !isAuthenticated) {
+      toast.info("Please sign in to proceed with checkout");
+      router.push("/login?redirect=/checkout");
+    }
+  }, [isAuthenticated, isLoading, mounted, hasHydrated, router]);
+
+  useEffect(() => {
+    if (user) {
+      if (!fullName && user.name) setFullName(user.name);
+      if (!email && user.email) setEmail(user.email);
+      if (!phone && user.phone) setPhone(user.phone);
+    }
+  }, [user, fullName, email, phone]);
 
   // Delivery fee based on zone
   const deliveryFee = deliveryZone === "INSIDE_DHAKA" ? 60 : 120;
@@ -190,6 +205,15 @@ export default function CheckoutPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (!mounted || !hasHydrated) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-24 text-center">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-700 mx-auto mb-3" />
+        <p className="text-xs sm:text-sm text-stone-500">Preparing secure checkout...</p>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (

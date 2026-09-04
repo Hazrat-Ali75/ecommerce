@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
@@ -16,7 +16,7 @@ function RegisterContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect");
 
-  const { setAuth } = useAuthStore();
+  const { isAuthenticated, setAuth } = useAuthStore();
   const syncCart = useCartStore((state) => state.syncWithBackend);
   const syncWishlist = useWishlistStore((state) => state.syncWithBackend);
 
@@ -29,6 +29,37 @@ function RegisterContent() {
 
   // Bangladeshi phone regex: 11 digits starting with 013-019
   const bdPhoneRegex = /^01[3-9]\d{8}$/;
+
+  // Helper to resolve safe destination URL
+  const getSafeRedirectUrl = () => {
+    let target = "/";
+    const rawRedirect =
+      redirectUrl ||
+      (typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("redirect")
+        : null);
+
+    if (rawRedirect) {
+      try {
+        target = decodeURIComponent(rawRedirect);
+      } catch {
+        target = rawRedirect;
+      }
+    }
+
+    if (!target.startsWith("/") || target.startsWith("//")) {
+      target = "/";
+    }
+    return target;
+  };
+
+  // If already authenticated, redirect automatically
+  useEffect(() => {
+    if (isAuthenticated) {
+      const target = getSafeRedirectUrl();
+      window.location.href = target;
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,13 +93,14 @@ function RegisterContent() {
       toast.success("Account created successfully! Welcome to BanglaShop.");
 
       // Sync guest cart & wishlist
-      await Promise.all([syncCart(), syncWishlist()]);
-
-      if (redirectUrl) {
-        router.push(redirectUrl);
-      } else {
-        router.push("/");
+      try {
+        await Promise.all([syncCart(), syncWishlist()]);
+      } catch {
+        // Continue
       }
+
+      const target = getSafeRedirectUrl();
+      window.location.href = target;
     } catch (err: unknown) {
       toast.error(
         getFriendlyErrorMessage(
