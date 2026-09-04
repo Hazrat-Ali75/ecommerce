@@ -167,7 +167,12 @@ export default function CheckoutPage() {
         router.push(`/order-success?orderNumber=${createdOrder.orderNumber}`);
       } else if (paymentMethod === "STRIPE") {
         toast.loading("Redirecting to secure Stripe Checkout...");
-        const stripeRes = await apiClient.post(`/payments/stripe/create-session/${createdOrder.id}`);
+        const frontendUrl =
+          typeof window !== "undefined" ? window.location.origin : undefined;
+        const stripeRes = await apiClient.post(
+          `/payments/stripe/create-session/${createdOrder.id}`,
+          { frontendUrl }
+        );
         if (stripeRes.data?.checkoutUrl) {
           window.location.href = stripeRes.data.checkoutUrl;
         } else {

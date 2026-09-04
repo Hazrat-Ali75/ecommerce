@@ -3,6 +3,7 @@ import {
   Post,
   Param,
   Req,
+  Body,
   Headers,
   HttpCode,
   HttpStatus,
@@ -19,8 +20,17 @@ export class PaymentsController {
   @Public()
   @Post('stripe/create-session/:orderId')
   @HttpCode(HttpStatus.OK)
-  async createStripeSession(@Param('orderId') orderId: string) {
-    return this.paymentsService.createCheckoutSession(orderId);
+  async createStripeSession(
+    @Param('orderId') orderId: string,
+    @Req() req: Request,
+    @Body() body?: { frontendUrl?: string }
+  ) {
+    const rawOrigin =
+      body?.frontendUrl ||
+      (req.headers['origin'] as string | undefined) ||
+      (req.headers['referer'] as string | undefined);
+
+    return this.paymentsService.createCheckoutSession(orderId, rawOrigin);
   }
 
   @Public()

@@ -30,7 +30,77 @@ export class PaymentsService {
     }
   }
 
-  async createCheckoutSession(orderId: string) {
+  /**
+   * Resolves the canonical web URL for Stripe redirect (success and cancel).
+   * Prioritizes valid client origins (e.g. Netlify live app, preview builds, or localhost for local dev).
+   * Ensures production deployments never accidentally redirect to localhost.
+   */
+  resolveWebUrl(clientOrigin?: string): string {
+    const defaultLiveUrl = 'https://ecommerce-banglashop.netlify.app';
+
+    // 1. If client provided an origin, validate and prioritize it
+    if (clientOrigin && typeof clientOrigin === 'string') {
+      try {
+        const parsed = new URL(clientOrigin.trim());
+        const origin = parsed.origin;
+
+        const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+        const isNetlify = origin.endsWith('.netlify.app');
+        const isDefaultLive = origin === defaultLiveUrl;
+        const isConfigured = [
+          this.configService.get<string>('WEB_URL'),
+          this.configService.get<string>('FRONTEND_URL'),
+          ...(this.configService.get<string>('ALLOWED_ORIGINS')?.split(',') || []),
+        ]
+          .filter(Boolean)
+          .some((url) => {
+            if (!url) return false;
+            try {
+              return new URL(url.trim()).origin === origin;
+            } catch {
+              return url.trim() === origin;
+            }
+          });
+
+        if (isNetlify || isDefaultLive || isConfigured || isLocalhost) {
+          return origin;
+        }
+      } catch {
+        // Invalid URL string, fall through
+      }
+    }
+
+    // 2. Check STRIPE_SUCCESS_URL in env
+    const envSuccessUrl = this.configService.get<string>('STRIPE_SUCCESS_URL');
+    if (envSuccessUrl) {
+      try {
+        const origin = new URL(envSuccessUrl.trim()).origin;
+        if (!origin.includes('localhost') || process.env.NODE_ENV !== 'production') {
+          return origin;
+        }
+      } catch {}
+    }
+
+    // 3. Check WEB_URL or FRONTEND_URL in env
+    const envWebUrl =
+      this.configService.get<string>('WEB_URL') ||
+      this.configService.get<string>('FRONTEND_URL');
+
+    if (envWebUrl) {
+      try {
+        const origin = new URL(envWebUrl.trim()).origin;
+        // In production, guard against accidentally having localhost in environment variables
+        if (!origin.includes('localhost') || process.env.NODE_ENV !== 'production') {
+          return origin;
+        }
+      } catch {}
+    }
+
+    // 4. Fallback to default verified live deployment
+    return defaultLiveUrl;
+  }
+
+  async createCheckoutSession(orderId: string, clientOrigin?: string) {
     if (!this.stripe) {
       throw new BadRequestException('Stripe is not configured on this server');
     }
@@ -48,10 +118,7 @@ export class PaymentsService {
       throw new BadRequestException('This order is already paid');
     }
 
-    const webUrl =
-      this.configService.get<string>('WEB_URL') ||
-      this.configService.get<string>('FRONTEND_URL') ||
-      'https://ecommerce-banglashop.netlify.app';
+    const webUrl = this.resolveWebUrl(clientOrigin);
 
     // Stripe currency support: BDT or fallback
     // In Stripe, 1 BDT = 100 Poisha (cents equivalent)

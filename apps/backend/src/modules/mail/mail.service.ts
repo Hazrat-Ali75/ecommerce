@@ -77,11 +77,27 @@ export class MailService {
     return this.sendEmail(to, subject, html);
   }
 
-  async sendPasswordResetEmail(to: string, resetToken: string, name: string): Promise<boolean> {
-    const webUrl =
+  private getWebUrl(): string {
+    const defaultLiveUrl = 'https://ecommerce-banglashop.netlify.app';
+    const envUrl =
       this.configService.get<string>('WEB_URL') ||
-      this.configService.get<string>('FRONTEND_URL') ||
-      'https://ecommerce-banglashop.netlify.app';
+      this.configService.get<string>('FRONTEND_URL');
+
+    if (!envUrl) return defaultLiveUrl;
+
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    if (
+      process.env.NODE_ENV === 'production' &&
+      (trimmed.includes('localhost') || trimmed.includes('127.0.0.1'))
+    ) {
+      return defaultLiveUrl;
+    }
+
+    return trimmed;
+  }
+
+  async sendPasswordResetEmail(to: string, resetToken: string, name: string): Promise<boolean> {
+    const webUrl = this.getWebUrl();
     const resetLink = `${webUrl}/reset-password?token=${resetToken}`;
     this.logger.log(`🔑 [PASSWORD RESET LINK for ${to}]: ${resetLink}`);
     const subject = 'Reset Your BanglaCart Password';
@@ -135,10 +151,7 @@ export class MailService {
             customerPhone,
           };
 
-    const webUrl =
-      this.configService.get<string>('WEB_URL') ||
-      this.configService.get<string>('FRONTEND_URL') ||
-      'https://ecommerce-banglashop.netlify.app';
+    const webUrl = this.getWebUrl();
     const trackingLink = `${webUrl}/track?orderNumber=${encodeURIComponent(opts.orderNumber)}${
       opts.customerPhone ? `&phone=${encodeURIComponent(opts.customerPhone)}` : ''
     }`;
@@ -298,10 +311,7 @@ export class MailService {
     customerName?: string,
     note?: string
   ): Promise<boolean> {
-    const webUrl =
-      this.configService.get<string>('WEB_URL') ||
-      this.configService.get<string>('FRONTEND_URL') ||
-      'https://ecommerce-banglashop.netlify.app';
+    const webUrl = this.getWebUrl();
     const trackingLink = `${webUrl}/track?orderNumber=${encodeURIComponent(orderNumber)}`;
     const recipient = customerName || 'Valued Customer';
 
