@@ -9,13 +9,30 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const port = process.env.PORT || 5000;
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const frontendUrl =
+    process.env.FRONTEND_URL ||
+    process.env.WEB_URL ||
+    'https://ecommerce-banglashop.netlify.app';
 
   // Security & Middleware
   const cookieMiddleware = typeof cookieParser === 'function' ? cookieParser : (cookieParser as { default: typeof cookieParser }).default;
   app.use(cookieMiddleware());
+
+  const allowedOrigins = Array.from(
+    new Set(
+      [
+        'https://ecommerce-banglashop.netlify.app',
+        frontendUrl,
+        'http://localhost:3000',
+        ...(process.env.ALLOWED_ORIGINS
+          ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+          : []),
+      ].filter(Boolean)
+    )
+  );
+
   app.enableCors({
-    origin: [frontendUrl, 'http://localhost:3000'],
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],

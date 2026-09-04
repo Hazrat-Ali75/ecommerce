@@ -78,7 +78,10 @@ export class MailService {
   }
 
   async sendPasswordResetEmail(to: string, resetToken: string, name: string): Promise<boolean> {
-    const webUrl = this.configService.get<string>('WEB_URL') || 'http://localhost:3000';
+    const webUrl =
+      this.configService.get<string>('WEB_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'https://ecommerce-banglashop.netlify.app';
     const resetLink = `${webUrl}/reset-password?token=${resetToken}`;
     this.logger.log(`🔑 [PASSWORD RESET LINK for ${to}]: ${resetLink}`);
     const subject = 'Reset Your BanglaCart Password';
@@ -132,7 +135,10 @@ export class MailService {
             customerPhone,
           };
 
-    const webUrl = this.configService.get<string>('WEB_URL') || 'http://localhost:3000';
+    const webUrl =
+      this.configService.get<string>('WEB_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'https://ecommerce-banglashop.netlify.app';
     const trackingLink = `${webUrl}/track?orderNumber=${encodeURIComponent(opts.orderNumber)}${
       opts.customerPhone ? `&phone=${encodeURIComponent(opts.customerPhone)}` : ''
     }`;
@@ -292,7 +298,10 @@ export class MailService {
     customerName?: string,
     note?: string
   ): Promise<boolean> {
-    const webUrl = this.configService.get<string>('WEB_URL') || 'http://localhost:3000';
+    const webUrl =
+      this.configService.get<string>('WEB_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'https://ecommerce-banglashop.netlify.app';
     const trackingLink = `${webUrl}/track?orderNumber=${encodeURIComponent(orderNumber)}`;
     const recipient = customerName || 'Valued Customer';
 

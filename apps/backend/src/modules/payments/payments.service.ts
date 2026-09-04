@@ -48,7 +48,10 @@ export class PaymentsService {
       throw new BadRequestException('This order is already paid');
     }
 
-    const webUrl = this.configService.get<string>('WEB_URL') || 'http://localhost:3000';
+    const webUrl =
+      this.configService.get<string>('WEB_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'https://ecommerce-banglashop.netlify.app';
 
     // Stripe currency support: BDT or fallback
     // In Stripe, 1 BDT = 100 Poisha (cents equivalent)
