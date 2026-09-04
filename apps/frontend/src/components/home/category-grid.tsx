@@ -32,21 +32,18 @@ export function CategoryGrid() {
 
   return (
     <section className="py-12">
-      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-2">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+      <div className="flex items-end justify-between mb-6 gap-2">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-sm sm:text-lg md:text-xl font-extrabold text-gray-900 tracking-tight truncate">
             Explore Categories
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Browse our strictly curated Bangladeshi retail collections
-          </p>
         </div>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+          className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-primary hover:underline shrink-0 pb-0.5 whitespace-nowrap"
         >
-          View All Products
-          <ArrowRight className="w-4 h-4" />
+          <span>View All</span>
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
         </Link>
       </div>
 

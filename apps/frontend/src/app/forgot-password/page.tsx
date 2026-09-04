@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
           <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
             <Mail className="w-6 h-6" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
             Forgot Password?
           </h1>
           <p className="text-xs sm:text-sm text-gray-500">

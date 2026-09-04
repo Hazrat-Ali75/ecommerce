@@ -305,7 +305,7 @@ export default function NewProductPage() {
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-gray-900">Add New Product</h2>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Add New Product</h2>
             <p className="text-xs text-gray-500">
               Strict category-governed Bangladeshi catalog builder
             </p>
@@ -443,7 +443,7 @@ export default function NewProductPage() {
             <h3>Featured Product Showcase</h3>
           </div>
           {isFeatured ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300 animate-in fade-in">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-in fade-in">
               <Sparkles className="w-3 h-3" />
               Featured on Homepage
             </span>

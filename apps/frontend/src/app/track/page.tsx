@@ -152,7 +152,7 @@ function TrackOrderContent() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
           Track Your Order
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">
@@ -228,7 +228,7 @@ function TrackOrderContent() {
           <div className="bg-white border rounded-2xl p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="text-xs text-gray-500 font-semibold">Tracking Order</span>
-              <h2 className="text-lg font-black font-mono text-gray-900">{order.orderNumber}</h2>
+              <h2 className="text-base sm:text-lg font-bold font-mono text-gray-900">{order.orderNumber}</h2>
               <p className="text-xs text-gray-500">
                 Placed on {new Date(order.createdAt).toLocaleDateString("en-BD", { dateStyle: "medium" })}
               </p>
@@ -236,7 +236,7 @@ function TrackOrderContent() {
 
             <div className="text-right">
               <span className="text-xs text-gray-500 font-semibold block">Total Amount</span>
-              <span className="text-lg font-black text-primary">{formatBDT(order.totalAmount)}</span>
+              <span className="text-base sm:text-lg font-bold text-primary">{formatBDT(order.totalAmount)}</span>
               <span className="text-[11px] block font-bold text-gray-600 capitalize">
                 {order.paymentMethod.replace(/_/g, " ")} ({order.paymentStatus})
               </span>
@@ -288,7 +288,7 @@ function TrackOrderContent() {
                       </div>
                       <span
                         className={`text-[11px] mt-2 font-bold text-center ${
-                          isCurrent ? "text-primary font-black" : isDone ? "text-gray-900" : "text-gray-400"
+                          isCurrent ? "text-primary font-extrabold" : isDone ? "text-gray-900" : "text-gray-400"
                         }`}
                       >
                         {step.label}
@@ -326,13 +326,13 @@ function TrackOrderContent() {
                         <div className="flex items-center justify-between gap-2">
                           <span
                             className={`text-xs font-bold ${
-                              isCurrent ? "text-primary font-black text-sm" : isDone ? "text-gray-900" : "text-gray-400"
+                              isCurrent ? "text-primary font-extrabold text-sm" : isDone ? "text-gray-900" : "text-gray-400"
                             }`}
                           >
                             {step.label}
                           </span>
                           {isCurrent && (
-                            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary animate-pulse">
+                            <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary animate-pulse">
                               Current Status
                             </span>
                           )}
@@ -390,9 +390,9 @@ function TrackOrderContent() {
                 </span>
                 <span className="font-bold text-gray-900">{formatBDT(order.deliveryFee)}</span>
               </div>
-              <div className="flex justify-between text-sm font-black text-gray-900 pt-2 border-t">
+              <div className="flex justify-between text-sm sm:text-base font-bold text-gray-900 pt-2 border-t">
                 <span>Total</span>
-                <span className="text-primary">{formatBDT(order.totalAmount)}</span>
+                <span className="text-primary font-bold">{formatBDT(order.totalAmount)}</span>
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OrdersService } from './orders.service';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { CouponsService } from '../coupons/coupons.service';
 import { DeliveryZone, PaymentMethod, OrderStatus } from '@prisma/client';
 import { CheckoutAddressSchema } from './dto/order.dto';
 
@@ -42,11 +43,17 @@ describe('OrdersService & Bangladeshi Market Logistics', () => {
     sendTrackingUpdateEmail: vi.fn().mockResolvedValue(true),
   };
 
+  const mockCouponsService = {
+    validateCoupon: vi.fn(),
+    validateAndApplyInTx: vi.fn(),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     ordersService = new OrdersService(
       mockPrismaService as unknown as PrismaService,
-      mockMailService as unknown as MailService
+      mockMailService as unknown as MailService,
+      mockCouponsService as unknown as CouponsService
     );
   });
 
@@ -206,6 +213,66 @@ describe('OrdersService & Bangladeshi Market Logistics', () => {
         where: { id: 'var_1' },
         data: { stockQuantity: { increment: 3 } },
       });
+    });
+
+    it('should apply coupon discount during checkout', async () => {
+      mockPrismaService.setting.findFirst.mockResolvedValue({
+        deliveryFeeInsideDhaka: 60.0,
+        deliveryFeeOutsideDhaka: 120.0,
+      });
+
+      mockPrismaService.product.findUnique.mockResolvedValue({
+        id: 'prod_1',
+        title: 'Panjabi',
+        isActive: true,
+        basePrice: 1000.0,
+        discountPrice: null,
+        variants: [
+          { id: 'var_1', sku: 'FAS-PAN-L', price: 1000.0, discountPrice: null, stockQuantity: 5 },
+        ],
+      });
+
+      mockCouponsService.validateAndApplyInTx.mockResolvedValue({
+        couponId: 'coup_1',
+        couponCode: 'SAVE10',
+        discountAmount: 100.0,
+      });
+
+      mockPrismaService.order.create.mockImplementation(({ data }) => ({
+        ...data,
+        id: 'order_123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+
+      const order = await ordersService.createOrder('user_1', {
+        shippingAddress: {
+          fullName: 'Rahim Khan',
+          phone: '01712345678',
+          email: 'rahim@test.com',
+          deliveryZone: DeliveryZone.INSIDE_DHAKA,
+          division: 'Dhaka',
+          district: 'Dhaka',
+          streetAddress: 'Gulshan 2',
+        },
+        paymentMethod: PaymentMethod.CASH_ON_DELIVERY,
+        items: [{ productId: 'prod_1', variantId: 'var_1', quantity: 1 }],
+        couponCode: 'SAVE10',
+      });
+
+      expect(mockCouponsService.validateAndApplyInTx).toHaveBeenCalledWith(
+        expect.anything(),
+        'SAVE10',
+        1000,
+        'user_1'
+      );
+      // Subtotal 1000 - Discount 100 + Inside Dhaka Delivery 60 = 960
+      expect(order.subtotal).toBe(1000);
+      expect(order.discount).toBe(100);
+      expect(order.deliveryFee).toBe(60);
+      expect(order.totalAmount).toBe(960);
+      expect(order.couponCode).toBe('SAVE10');
+      expect(order.couponId).toBe('coup_1');
     });
   });
 });

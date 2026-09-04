@@ -17,14 +17,28 @@ import {
   AlertCircle,
   ArrowRight,
   ShoppingBag,
+  Tag,
+  X,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, clearCart } = useCartStore();
+  const {
+    items,
+    subtotal,
+    clearCart,
+    appliedCoupon,
+    applyCoupon,
+    removeCoupon,
+    getDiscountAmount,
+  } = useCartStore();
   const { user, isAuthenticated, isLoading } = useAuthStore();
+
+  const [couponInput, setCouponInput] = useState("");
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -47,7 +61,42 @@ export default function CheckoutPage() {
   // Delivery fee based on zone
   const deliveryFee = deliveryZone === "INSIDE_DHAKA" ? 60 : 120;
   const currentSubtotal = subtotal();
-  const totalAmount = currentSubtotal + deliveryFee;
+  const discountAmount = getDiscountAmount();
+  const totalAmount = Math.max(0, currentSubtotal - discountAmount) + deliveryFee;
+
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!couponInput.trim()) {
+      toast.error("Please enter a promo code");
+      return;
+    }
+
+    try {
+      setIsApplyingCoupon(true);
+      const res = await apiClient.post("/coupons/validate", {
+        code: couponInput.trim().toUpperCase(),
+        subtotal: currentSubtotal,
+      });
+
+      applyCoupon({
+        couponId: res.data.couponId,
+        code: res.data.code,
+        description: res.data.description,
+        discountType: res.data.discountType,
+        discountValue: res.data.discountValue,
+        discountAmount: res.data.discountAmount,
+        minOrderAmount: res.data.minOrderAmount,
+        maxDiscount: res.data.maxDiscount,
+      });
+
+      toast.success(res.data.message || `Coupon '${res.data.code}' applied!`);
+      setCouponInput("");
+    } catch (err: unknown) {
+      toast.error(getFriendlyErrorMessage(err, "Invalid promo code"));
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
 
   // Bangladeshi phone regex: 11 digits starting with 013-019
   const bdPhoneRegex = /^01[3-9]\d{8}$/;
@@ -94,6 +143,7 @@ export default function CheckoutPage() {
           streetAddress: streetAddress.trim(),
         },
         paymentMethod,
+        couponCode: appliedCoupon?.code || undefined,
         notes: notes.trim() || undefined,
         items: items.map((i) => ({
           productId: i.productId,
@@ -145,8 +195,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-8 tracking-tight">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 mb-6 sm:mb-8 tracking-tight">
         Secure Checkout
       </h1>
 
@@ -217,7 +267,7 @@ export default function CheckoutPage() {
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-xs sm:text-sm text-gray-900">Inside Dhaka (Capital)</span>
-                    <span className="text-xs font-black text-primary">৳60</span>
+                    <span className="text-xs sm:text-sm font-bold text-primary">৳60</span>
                   </div>
                   <span className="text-[11px] sm:text-xs text-gray-500">Estimated 24–48 Hours</span>
                 </label>
@@ -232,7 +282,7 @@ export default function CheckoutPage() {
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-xs sm:text-sm text-gray-900">Outside Dhaka</span>
-                    <span className="text-xs font-black text-primary">৳120</span>
+                    <span className="text-xs sm:text-sm font-bold text-primary">৳120</span>
                   </div>
                   <span className="text-[11px] sm:text-xs text-gray-500">3–5 Days (All 64 Districts)</span>
                 </label>
@@ -370,22 +420,82 @@ export default function CheckoutPage() {
               ))}
             </div>
 
+            {/* Promo Code Input or Applied Badge */}
+            <div className="pt-2">
+              {appliedCoupon ? (
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-emerald-900 block">
+                        {appliedCoupon.code} applied
+                      </span>
+                      <span className="text-[11px] text-emerald-700">
+                        {appliedCoupon.discountType === "PERCENTAGE"
+                          ? `${appliedCoupon.discountValue}% discount`
+                          : `৳${appliedCoupon.discountValue} flat discount`}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeCoupon}
+                    className="p-1 text-gray-400 hover:text-red-500 rounded-lg hover:bg-white transition-colors"
+                    title="Remove coupon"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Tag className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Promo Code"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold uppercase bg-gray-50 border border-gray-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={isApplyingCoupon || !couponInput.trim()}
+                    className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-colors flex items-center gap-1 shrink-0"
+                  >
+                    {isApplyingCoupon && <Loader2 className="w-3 h-3 animate-spin" />}
+                    Apply
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Price Calculations */}
             <div className="space-y-2 pt-2 border-t text-xs">
               <div className="flex justify-between text-gray-600">
                 <span>Items Subtotal</span>
                 <span className="font-semibold text-gray-900">{formatBDT(currentSubtotal)}</span>
               </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-emerald-600 font-semibold">
+                  <span className="flex items-center gap-1">
+                    <Tag className="w-3.5 h-3.5" />
+                    Coupon Discount ({appliedCoupon?.code})
+                  </span>
+                  <span>-{formatBDT(discountAmount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-600">
                 <span>
                   Delivery Charge (
-                  {deliveryZone === "INSIDE_DHAKA" ? "Inside Dhaka" : "Outside Dhaka"})
+                  {deliveryZone === "INSIDE_DHAKA" ? "Inside Dhaka (৳60)" : "Outside Dhaka (৳120)"})
                 </span>
                 <span className="font-semibold text-gray-900">{formatBDT(deliveryFee)}</span>
               </div>
-              <div className="flex justify-between text-sm font-black text-gray-900 pt-2 border-t">
+              <div className="flex justify-between text-sm sm:text-base font-bold text-gray-900 pt-2 border-t">
                 <span>Total Amount</span>
-                <span className="text-primary text-base">{formatBDT(totalAmount)}</span>
+                <span className="text-primary text-base sm:text-lg font-extrabold">{formatBDT(totalAmount)}</span>
               </div>
             </div>
 

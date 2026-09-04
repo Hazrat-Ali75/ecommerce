@@ -233,7 +233,7 @@ export default function CustomerOrdersPage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
                   My Orders
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary">
@@ -266,24 +266,24 @@ export default function CustomerOrdersPage() {
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t">
             <div className="bg-gray-50 rounded-2xl p-3 border">
-              <p className="text-[11px] font-bold text-gray-500 uppercase">Total Placed</p>
-              <p className="text-lg font-black text-gray-900 mt-0.5">{orders.length}</p>
+              <p className="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Placed</p>
+              <p className="text-base sm:text-lg font-bold text-gray-900 mt-0.5">{orders.length}</p>
             </div>
             <div className="bg-blue-50/60 rounded-2xl p-3 border border-blue-100">
-              <p className="text-[11px] font-bold text-blue-700 uppercase">Active In-Transit</p>
-              <p className="text-lg font-black text-blue-900 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] font-bold text-blue-700 uppercase tracking-wider">Active In-Transit</p>
+              <p className="text-base sm:text-lg font-bold text-blue-900 mt-0.5">
                 {orders.filter((o) => ["CONFIRMED", "PROCESSING", "SHIPPED", "OUT_FOR_DELIVERY"].includes(o.orderStatus)).length}
               </p>
             </div>
             <div className="bg-emerald-50/60 rounded-2xl p-3 border border-emerald-100">
-              <p className="text-[11px] font-bold text-emerald-700 uppercase">Delivered</p>
-              <p className="text-lg font-black text-emerald-900 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Delivered</p>
+              <p className="text-base sm:text-lg font-bold text-emerald-900 mt-0.5">
                 {orders.filter((o) => o.orderStatus === "DELIVERED").length}
               </p>
             </div>
             <div className="bg-amber-50/60 rounded-2xl p-3 border border-amber-100">
-              <p className="text-[11px] font-bold text-amber-700 uppercase">Pending</p>
-              <p className="text-lg font-black text-amber-900 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] font-bold text-amber-700 uppercase tracking-wider">Pending</p>
+              <p className="text-base sm:text-lg font-bold text-amber-900 mt-0.5">
                 {orders.filter((o) => o.orderStatus === "PENDING").length}
               </p>
             </div>
@@ -385,7 +385,7 @@ export default function CustomerOrdersPage() {
                       {/* Order Number & Copy */}
                       <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border">
                         <span className="text-[11px] font-bold text-gray-400 uppercase">Order</span>
-                        <span className="font-mono font-black text-xs sm:text-sm text-gray-900">
+                        <span className="font-mono font-bold text-xs sm:text-sm text-gray-900">
                           {ord.orderNumber}
                         </span>
                         <button
@@ -486,7 +486,7 @@ export default function CustomerOrdersPage() {
                             </div>
 
                             <div className="text-right shrink-0">
-                              <p className="text-xs sm:text-sm font-black text-gray-900">
+                              <p className="text-xs sm:text-sm font-bold text-gray-900">
                                 {formatBDT(Number(item.totalPrice))}
                               </p>
                               <p className="text-[11px] text-gray-400 font-medium">
@@ -599,7 +599,7 @@ export default function CustomerOrdersPage() {
                       <div className="flex items-center gap-4 text-right">
                         <div>
                           <p className="text-[10px] text-gray-400 uppercase font-bold">Total Amount</p>
-                          <p className="text-base sm:text-lg font-black text-gray-900">
+                          <p className="text-base sm:text-lg font-bold text-gray-900">
                             {formatBDT(Number(ord.totalAmount))}
                           </p>
                         </div>

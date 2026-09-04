@@ -84,7 +84,7 @@ function RegisterContent() {
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black text-xl mx-auto mb-3">
             ব
           </div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">Create Account</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Create Account</h1>
           <p className="text-xs text-gray-500">
             {redirectUrl === "/checkout"
               ? "Register to complete your delivery order details"

@@ -102,7 +102,7 @@ export default function AdminProductsPage() {
       {/* Header & New Product Action */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900">Product Catalog</h2>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Product Catalog</h2>
           <p className="text-xs text-gray-500">
             Manage authentic Fashion, Footwear, and Smart Gadgets inventory
           </p>

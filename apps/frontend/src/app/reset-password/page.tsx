@@ -82,16 +82,15 @@ function ResetPasswordContent() {
           <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-black text-gray-900">Invalid Reset Link</h2>
+          <h2 className="text-xl font-extrabold text-gray-900">Invalid Reset Link</h2>
           <p className="text-xs sm:text-sm text-gray-500">
             This password reset link is missing a security token or is malformed. Please request a new link.
           </p>
           <Link
             href="/forgot-password"
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs hover:bg-primary/90"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs sm:text-sm font-bold rounded-xl transition-colors"
           >
             <span>Request New Reset Link</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
@@ -106,7 +105,7 @@ function ResetPasswordContent() {
           <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
             <Lock className="w-6 h-6" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
             Create New Password
           </h1>
           <p className="text-xs sm:text-sm text-gray-500">

@@ -34,11 +34,11 @@ export default function WishlistPage() {
         <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <Heart className="w-8 h-8" />
         </div>
-        <h1 className="text-2xl font-black text-gray-900 mb-2">Your Wishlist is Empty</h1>
-        <p className="text-sm text-gray-500 mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">Your Wishlist is Empty</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mb-6">
           Bookmark your favorite Panjabis, Sarees, Sneakers, and Gadgets to view them here.
         </p>
-        <Link href="/shop" className="px-6 py-3 bg-primary text-white text-sm font-bold rounded-xl">
+        <Link href="/shop" className="px-6 py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl">
           Discover Products
         </Link>
       </div>
@@ -46,15 +46,15 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       <div className="pb-6 border-b mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
           My Wishlist ({items.length})
         </h1>
         <p className="text-xs text-gray-500 mt-1">Products you saved for later</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         {items.map((item) => (
           <div key={item.productId} className="bg-white border rounded-2xl overflow-hidden shadow-xs flex flex-col justify-between group">
             <Link href={`/product/${item.slug}`} className="relative aspect-square bg-gray-50 block overflow-hidden">
@@ -66,19 +66,19 @@ export default function WishlistPage() {
                   e.preventDefault();
                   toggleWishlist(item);
                 }}
-                className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white text-red-500 shadow-xs transition-colors"
+                className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-full bg-white/80 hover:bg-white text-red-500 shadow-xs transition-colors"
                 aria-label="Remove from wishlist"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </Link>
 
-            <div className="p-4 space-y-2">
-              <span className="text-[11px] font-bold text-primary">{item.brand}</span>
-              <h3 className="text-xs font-bold text-gray-900 line-clamp-2 leading-snug">
+            <div className="p-3 sm:p-4 space-y-1.5 sm:space-y-2">
+              <span className="text-[10px] sm:text-[11px] font-bold text-primary">{item.brand}</span>
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-snug">
                 <Link href={`/product/${item.slug}`}>{item.title}</Link>
               </h3>
-              <div className="font-extrabold text-sm text-gray-900">{formatBDT(item.price)}</div>
+              <div className="font-bold text-sm sm:text-base text-gray-900">{formatBDT(item.price)}</div>
 
               <Link
                 href={`/product/${item.slug}`}

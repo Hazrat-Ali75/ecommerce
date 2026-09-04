@@ -26,7 +26,7 @@ export default function AdminCategoriesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-black text-gray-900">Categories & Domain Governance</h2>
+        <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Categories & Domain Governance</h2>
         <p className="text-xs text-gray-500">
           Core product categories with strict variation invariants
         </p>
@@ -43,7 +43,7 @@ export default function AdminCategoriesPage() {
         </div>
       </div>
 
-      {/* Category Cards Grid */}
+      {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {isLoading ? (
           [1, 2, 3].map((i) => (
@@ -51,26 +51,18 @@ export default function AdminCategoriesPage() {
           ))
         ) : (
           categories.map((cat) => {
-            const isFashion = cat.type === "FASHION";
-            const isFootwear = cat.type === "FOOTWEAR";
-            const isElectronics = cat.type === "ELECTRONICS";
+            const isFashion = cat.slug === "fashion-apparel";
+            const isFootwear = cat.slug === "footwear-sneakers";
+            const isElectronics = cat.slug === "electronics-gadgets";
 
             return (
               <div
                 key={cat.id}
-                className="bg-white border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4"
+                className="bg-white border rounded-2xl p-6 shadow-xs space-y-4 hover:shadow-md transition-shadow"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        isFashion
-                          ? "bg-purple-100 text-purple-800"
-                          : isFootwear
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-emerald-100 text-emerald-800"
-                      }`}
-                    >
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider">
                       {cat.type}
                     </span>
                     <span className="text-xs font-bold text-gray-500 font-mono">
@@ -78,7 +70,7 @@ export default function AdminCategoriesPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-base font-black text-gray-900">{cat.name}</h3>
+                  <h3 className="text-base font-bold text-gray-900">{cat.name}</h3>
                   <p className="text-xs text-gray-500 font-mono">{cat.slug}</p>
 
                   <div className="pt-3 border-t space-y-2">

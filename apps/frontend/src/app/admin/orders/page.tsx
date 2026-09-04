@@ -178,7 +178,7 @@ export default function AdminOrdersPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900">Order Fulfillment</h2>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Order Fulfillment</h2>
           <p className="text-xs text-gray-500">
             Dispatch, courier assignment, and customer fulfillment across 64 districts
           </p>
@@ -257,7 +257,7 @@ export default function AdminOrdersPage() {
                   <tr key={ord.id} className="hover:bg-gray-50/50 transition-colors">
                     {/* Order ID */}
                     <td className="py-3 px-4">
-                      <p className="font-mono font-black text-gray-900">{ord.orderNumber}</p>
+                      <p className="font-mono font-bold text-gray-900">{ord.orderNumber}</p>
                       <p className="text-[11px] text-gray-400">
                         {new Date(ord.createdAt).toLocaleString("en-BD", {
                           dateStyle: "medium",
@@ -379,7 +379,7 @@ export default function AdminOrdersPage() {
           <div className="space-y-5">
             <div className="flex items-center justify-between border-b pb-3">
               <div>
-                <h3 className="text-base font-black text-gray-900">
+                <h3 className="text-base font-bold text-gray-900">
                   Update Order: {activeOrder.orderNumber}
                 </h3>
                 <p className="text-xs text-gray-500">

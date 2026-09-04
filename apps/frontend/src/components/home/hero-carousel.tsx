@@ -83,7 +83,7 @@ export function HeroCarousel({ initialBanners }: { initialBanners?: BannerItem[]
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className="relative flex-[0_0_100%] min-w-0 w-full h-[460px] sm:h-[540px] md:h-[620px]"
+              className="relative flex-[0_0_100%] min-w-0 w-full h-[380px] sm:h-[480px] md:h-[560px]"
             >
               {/* Crisp, Vibrant Full-Resolution Background Image */}
               <Image
@@ -98,43 +98,43 @@ export function HeroCarousel({ initialBanners }: { initialBanners?: BannerItem[]
               <div className="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-950/45 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-black/20" />
 
-              {/* Text Container without background & with entrance animation on slide change */}
-              <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-12 lg:px-16 flex flex-col justify-center">
+              {/* Text Container with generous side padding to stay clear of navigation arrows */}
+              <div className="relative h-full max-w-7xl mx-auto px-10 sm:px-16 lg:px-20 flex flex-col justify-center">
                 {selectedIndex === index ? (
                   <div
                     key={`${banner.id}-${selectedIndex}`}
-                    className="max-w-2xl space-y-3 sm:space-y-4 pr-4"
+                    className="max-w-[260px] xs:max-w-[290px] sm:max-w-md md:max-w-xl space-y-2 sm:space-y-3"
                   >
                     {banner.badgeText && (
-                      <div className="animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-primary text-white text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-lg w-fit">
-                        <Sparkles className="w-3.5 h-3.5 text-secondary" />
+                      <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 ease-out inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-primary text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider shadow-md w-fit">
+                        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-secondary" />
                         {banner.badgeText}
                       </div>
                     )}
 
-                    <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150 fill-mode-both ease-out text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+                    <h1 className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both ease-out text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-snug sm:leading-tight tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                       {banner.title}
                     </h1>
 
                     {banner.subtitle && (
-                      <p className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both ease-out text-xs sm:text-base md:text-lg text-white/95 font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] max-w-xl line-clamp-3 sm:line-clamp-none">
+                      <p className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both ease-out text-[11px] sm:text-sm md:text-base text-white/90 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] line-clamp-2 sm:line-clamp-none">
                         {banner.subtitle}
                       </p>
                     )}
 
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-450 fill-mode-both ease-out pt-2 sm:pt-3">
+                    <div className="animate-in fade-in slide-in-from-bottom-3 duration-700 delay-450 fill-mode-both ease-out pt-1 sm:pt-2">
                       <Link
                         href={banner.linkUrl}
-                        className="inline-flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 rounded-xl bg-primary text-white text-xs sm:text-base font-black hover:bg-primary/90 transition-all transform hover:-translate-y-0.5 hover:scale-105 shadow-xl shadow-primary/40"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-primary text-white text-[11px] sm:text-sm font-semibold sm:font-bold hover:bg-primary/90 transition-all transform hover:-translate-y-0.5 hover:scale-105 shadow-md shadow-primary/30 w-fit"
                       >
                         Shop Collection
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </Link>
                     </div>
                   </div>
                 ) : (
-                  <div className="max-w-2xl space-y-4 opacity-0 pointer-events-none">
-                    <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-white">
+                  <div className="max-w-[260px] xs:max-w-[290px] sm:max-w-md md:max-w-xl space-y-2 opacity-0 pointer-events-none">
+                    <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white">
                       {banner.title}
                     </h1>
                   </div>
@@ -148,18 +148,18 @@ export function HeroCarousel({ initialBanners }: { initialBanners?: BannerItem[]
       {/* Navigation Arrows */}
       <button
         onClick={scrollPrev}
-        className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-80 sm:opacity-70 sm:group-hover:opacity-100 transition-all duration-200 shadow-xl"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-80 sm:opacity-70 sm:group-hover:opacity-100 transition-all duration-200 shadow-xl"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
 
       <button
         onClick={scrollNext}
-        className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-80 sm:opacity-70 sm:group-hover:opacity-100 transition-all duration-200 shadow-xl"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center opacity-80 sm:opacity-70 sm:group-hover:opacity-100 transition-all duration-200 shadow-xl"
         aria-label="Next slide"
       >
-        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
 
       {/* Pagination Indicators */}

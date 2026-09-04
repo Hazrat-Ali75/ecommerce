@@ -203,7 +203,7 @@ function ShopContent() {
       {/* 1. TOP HEADING */}
       <div className="space-y-1">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-          <h1 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
             {selectedCategoryObj?.slug ? selectedCategoryObj.name : "All Products"}
           </h1>
           <span className="text-xs sm:text-sm font-semibold text-gray-500">
@@ -238,7 +238,7 @@ function ShopContent() {
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 {activeFiltersCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-secondary text-white text-[11px] font-black flex items-center justify-center">
+                  <span className="w-5 h-5 rounded-full bg-secondary text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center">
                     {activeFiltersCount}
                   </span>
                 )}
@@ -251,7 +251,7 @@ function ShopContent() {
           <div className="sm:col-span-1 md:col-span-4">
             <form onSubmit={handleApplyPrice} className="flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">
                   ৳
                 </span>
                 <input
@@ -264,7 +264,7 @@ function ShopContent() {
               </div>
               <span className="text-xs text-gray-400 font-bold">-</span>
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">
                   ৳
                 </span>
                 <input
@@ -445,7 +445,7 @@ function ShopContent() {
             <div className="p-4 sm:p-6 border-b flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-5 h-5 text-primary" />
-                <h2 className="text-base sm:text-lg font-black text-gray-900">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">
                   Filter Products
                 </h2>
               </div>
@@ -480,7 +480,7 @@ function ShopContent() {
                         }
                         className={`p-3 rounded-xl sm:rounded-2xl border-2 text-left transition-all flex items-center justify-between ${
                           isSelected
-                            ? "border-primary bg-primary/5 text-primary font-black"
+                            ? "border-primary bg-primary/5 text-primary font-bold"
                             : "border-gray-200 text-gray-700 hover:border-gray-300 font-semibold"
                         }`}
                       >
@@ -605,7 +605,7 @@ function ShopContent() {
               </button>
               <button
                 onClick={() => setFilterModalOpen(false)}
-                className="flex-1 py-3 px-6 bg-primary text-white text-xs sm:text-sm font-black rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 text-center"
+                className="flex-1 py-3 px-6 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 text-center"
               >
                 Show Results {data?.pagination?.total ? `(${data.pagination.total})` : ""}
               </button>

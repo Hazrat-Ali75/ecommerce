@@ -17,12 +17,16 @@ import {
   X,
   ShieldCheck,
   ChevronRight,
+  Star,
+  Ticket,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
+  { name: "Coupons", href: "/admin/coupons", icon: Ticket },
+  { name: "Reviews", href: "/admin/reviews", icon: Star },
   { name: "Categories", href: "/admin/categories", icon: Tags },
   { name: "Hero Banners", href: "/admin/banners", icon: ImageIcon },
   { name: "Users & Staff", href: "/admin/users", icon: Users },

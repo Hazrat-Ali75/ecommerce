@@ -154,7 +154,7 @@ export default function AdminBannersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900">Hero Carousel Banners</h2>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Hero Carousel Banners</h2>
           <p className="text-xs text-gray-500">
             Control the homepage slider promotions and featured seasonal campaigns
           </p>
@@ -200,7 +200,7 @@ export default function AdminBannersPage() {
                       {b.badgeText}
                     </span>
                   )}
-                  <h4 className="text-base font-black line-clamp-1">{b.title}</h4>
+                  <h4 className="text-base font-bold line-clamp-1">{b.title}</h4>
                   {b.subtitle && <p className="text-xs text-gray-300 line-clamp-1">{b.subtitle}</p>}
                 </div>
               </div>

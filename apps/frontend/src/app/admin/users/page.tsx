@@ -73,7 +73,7 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-black text-gray-900">User Accounts & Administration</h2>
+        <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">User Accounts & Administration</h2>
         <p className="text-xs text-gray-500">
           Manage registered marketplace customers and staff access permissions
         </p>

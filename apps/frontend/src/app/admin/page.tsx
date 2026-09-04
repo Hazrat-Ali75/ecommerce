@@ -105,7 +105,7 @@ export default function AdminDashboardPage() {
       {/* Header bar with live indicator */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900">Operations Overview</h2>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Operations Overview</h2>
           <p className="text-xs text-gray-500">Live operational data and order metrics across Bangladesh</p>
         </div>
         <button
@@ -129,7 +129,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
               {formatBDT(data.totalRevenue)}
             </p>
             <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
               {data.totalOrders}
             </p>
             <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
@@ -169,7 +169,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-black text-amber-900 tracking-tight">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-900 tracking-tight">
               {data.pendingOrders}
             </p>
             <p className="text-[11px] text-amber-700 font-medium mt-1">
@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-black text-red-900 tracking-tight">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-red-900 tracking-tight">
               {data.lowStockCount}
             </p>
             <p className="text-[11px] text-red-700 font-medium mt-1">
@@ -443,7 +443,7 @@ export default function AdminDashboardPage() {
                     <p className="text-[11px] text-gray-500">{p.brand} • {p.totalQuantitySold} sold</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-black text-gray-900">{formatBDT(p.totalRevenue)}</p>
+                    <p className="text-xs font-bold text-gray-900">{formatBDT(p.totalRevenue)}</p>
                   </div>
                 </div>
               ))

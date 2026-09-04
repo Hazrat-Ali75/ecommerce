@@ -19,18 +19,18 @@ function OrderSuccessContent() {
         Order Confirmed
       </span>
 
-      <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4 tracking-tight">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
         Thank you for your order!
       </h1>
 
-      <p className="text-sm text-gray-600 mb-8 max-w-md mx-auto">
+      <p className="text-xs sm:text-sm text-gray-600 mb-8 max-w-md mx-auto">
         Your order has been recorded. We have sent a confirmation email with all details and tracking updates.
       </p>
 
       <div className="bg-gray-50 border rounded-2xl p-6 mb-8 text-left space-y-4">
         <div className="flex items-center justify-between border-b pb-4">
           <span className="text-xs text-gray-500 font-semibold">Order Number</span>
-          <span className="font-mono text-sm font-black text-primary">{orderNumber}</span>
+          <span className="font-mono text-sm font-bold text-primary">{orderNumber}</span>
         </div>
 
         <div className="flex items-center gap-3 text-xs text-gray-600">

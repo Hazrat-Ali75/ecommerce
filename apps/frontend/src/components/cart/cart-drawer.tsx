@@ -121,7 +121,7 @@ export function CartDrawer() {
                       </div>
 
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs sm:text-sm font-black text-gray-900">
+                        <span className="text-xs sm:text-sm font-bold text-gray-900">
                           {formatBDT(item.price)}
                         </span>
 
@@ -188,7 +188,7 @@ export function CartDrawer() {
 
               <div className="pt-2 border-t flex justify-between text-sm sm:text-base font-bold text-gray-900">
                 <span>Estimated Total</span>
-                <span className="text-primary font-black">{formatBDT(subtotal())}</span>
+                <span className="text-primary font-bold text-sm sm:text-base">{formatBDT(subtotal())}</span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1">

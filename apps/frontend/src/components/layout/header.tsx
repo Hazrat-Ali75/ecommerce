@@ -99,7 +99,7 @@ export function Header() {
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlistItems.length > 0 && (
-                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ring-2 ring-white">
+                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center shadow-xs ring-2 ring-white">
                     {wishlistItems.length}
                   </span>
                 )}
@@ -113,7 +113,7 @@ export function Header() {
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && totalItems() > 0 && (
-                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-primary text-white rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ring-2 ring-white">
+                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 bg-primary text-white rounded-full text-[10px] font-bold flex items-center justify-center shadow-xs ring-2 ring-white">
                     {totalItems()}
                   </span>
                 )}
@@ -127,7 +127,7 @@ export function Header() {
                     className="flex items-center gap-1.5 p-1 rounded-full hover:bg-gray-100 text-gray-700 transition-colors"
                     aria-label="User profile menu"
                   >
-                    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary font-black text-xs flex items-center justify-center ring-2 ring-primary/20">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center ring-2 ring-primary/20">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   </button>
@@ -144,7 +144,7 @@ export function Header() {
                       {/* Popover Card */}
                       <div className="fixed md:absolute bottom-0 md:bottom-auto left-0 md:left-auto right-0 md:right-0 md:top-full md:mt-2 w-full md:w-64 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl md:shadow-xl border border-gray-100 p-4 sm:p-2 z-50 animate-in fade-in slide-in-from-bottom-6 md:slide-in-from-top-2 duration-200">
                         <div className="p-3 bg-gray-50 rounded-xl mb-2 flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-primary text-white font-black text-sm flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-primary text-white font-bold text-sm flex items-center justify-center shrink-0">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0 flex-1">

@@ -34,6 +34,7 @@ export const CheckoutSchema = z.object({
     errorMap: () => ({ message: 'Payment method must be CASH_ON_DELIVERY or STRIPE' }),
   }),
   items: z.array(CheckoutItemInputSchema).optional(), // If omitted, checks out from user's DB cart
+  couponCode: z.string().optional(),
   notes: z.string().max(500).optional(),
 });
 

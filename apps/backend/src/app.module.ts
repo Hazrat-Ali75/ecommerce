@@ -13,6 +13,8 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { CouponsModule } from './modules/coupons/coupons.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     OrdersModule,
     PaymentsModule,
     AnalyticsModule,
+    ReviewsModule,
+    CouponsModule,
   ],
   controllers: [],
   providers: [],

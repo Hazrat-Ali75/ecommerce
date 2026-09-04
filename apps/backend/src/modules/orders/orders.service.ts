@@ -12,6 +12,7 @@ import {
   TrackOrderQueryDto,
 } from './dto/order.dto';
 import { DeliveryZone, PaymentMethod, OrderStatus, Prisma } from '@prisma/client';
+import { CouponsService } from '../coupons/coupons.service';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -20,7 +21,8 @@ export class OrdersService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly couponsService: CouponsService
   ) {}
 
   /**
@@ -42,7 +44,7 @@ export class OrdersService {
    * Order Placement with Atomic Stock Protection (prisma.$transaction)
    */
   async createOrder(userId: string | undefined, dto: CheckoutDto) {
-    const { shippingAddress, paymentMethod, notes } = dto;
+    const { shippingAddress, paymentMethod, notes, couponCode } = dto;
 
     // 1. Resolve Items to checkout (either direct items payload or user cart)
     type ResolvedItem = {
@@ -161,7 +163,24 @@ export class OrdersService {
         });
       }
 
-      const totalAmount = subtotal + deliveryFee;
+      // 3. Apply Coupon Discount if coupon code provided
+      let discount = 0;
+      let appliedCouponId: string | null = null;
+      let appliedCouponCode: string | null = null;
+
+      if (couponCode?.trim()) {
+        const couponResult = await this.couponsService.validateAndApplyInTx(
+          tx,
+          couponCode.trim(),
+          subtotal,
+          userId
+        );
+        discount = couponResult.discountAmount;
+        appliedCouponId = couponResult.couponId;
+        appliedCouponCode = couponResult.couponCode;
+      }
+
+      const totalAmount = Math.max(0, subtotal - discount) + deliveryFee;
       const orderNumber = this.generateOrderNumber();
 
       const newOrder = await tx.order.create({
@@ -175,7 +194,10 @@ export class OrdersService {
           shippingAddress: shippingAddress as unknown as Prisma.InputJsonValue,
           subtotal,
           deliveryFee,
+          discount,
           totalAmount,
+          couponId: appliedCouponId,
+          couponCode: appliedCouponCode,
           paymentMethod,
           paymentStatus: 'PENDING',
           orderStatus: OrderStatus.PENDING,

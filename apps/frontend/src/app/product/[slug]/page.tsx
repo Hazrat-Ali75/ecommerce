@@ -22,6 +22,7 @@ import {
   Share2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ProductReviews } from "@/components/products/product-reviews";
 
 interface Variant {
   id: string;
@@ -187,7 +188,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               className="object-cover"
             />
             {hasDiscount && (
-              <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md">
+              <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
                 SALE
               </span>
             )}
@@ -241,22 +242,39 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </button>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mt-1 leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 mt-1 leading-tight tracking-tight">
               {product.title}
             </h1>
+
+            {/* Quick rating link to reviews section */}
+            <div className="mt-2 flex items-center gap-2">
+              <a
+                href="#reviews-section"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-primary transition-colors group"
+              >
+                <div className="flex items-center gap-0.5 text-amber-400">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className="w-3.5 h-3.5 fill-current" />
+                  ))}
+                </div>
+                <span className="font-bold text-gray-700 group-hover:underline ml-1">
+                  Customer Reviews
+                </span>
+              </a>
+            </div>
           </div>
 
           {/* Pricing */}
-          <div className="flex items-baseline gap-3 pb-4 border-b">
-            <span className="text-3xl font-black text-gray-900">
+          <div className="flex items-baseline gap-2.5 sm:gap-3 pb-4 border-b flex-wrap">
+            <span className="text-2xl sm:text-3xl font-extrabold text-gray-900">
               {formatBDT(activePrice)}
             </span>
             {hasDiscount && (
-              <span className="text-base text-gray-400 line-through">
+              <span className="text-sm sm:text-base text-gray-400 line-through">
                 {formatBDT(originalPrice)}
               </span>
             )}
-            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
+            <span className="text-[11px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
               Inclusive of all VAT
             </span>
           </div>
@@ -420,13 +438,18 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
 
+      {/* ========================================================================= */}
+      {/* PRODUCT REVIEWS & CUSTOMER FEEDBACK SECTION                                */}
+      {/* ========================================================================= */}
+      <ProductReviews productId={product.id} productTitle={product.title} />
+
       {/* Mobile Sticky Action Bar */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl z-40 flex items-center justify-between gap-3">
         <div>
           <span className="text-[10px] text-gray-500 font-bold uppercase block">
             {selectedVariant ? `Size ${selectedVariant.attributes.size?.toUpperCase()}` : "Price"}
           </span>
-          <span className="text-base font-black text-gray-900">
+          <span className="text-base font-bold text-gray-900">
             {formatBDT(activePrice * quantity)}
           </span>
         </div>

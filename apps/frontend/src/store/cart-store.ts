@@ -17,9 +17,21 @@ export interface CartItem {
   stockQuantity: number;
 }
 
+export interface AppliedCoupon {
+  couponId: string;
+  code: string;
+  description?: string | null;
+  discountType: "PERCENTAGE" | "FIXED_AMOUNT";
+  discountValue: number;
+  discountAmount: number;
+  minOrderAmount?: number | null;
+  maxDiscount?: number | null;
+}
+
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
+  appliedCoupon: AppliedCoupon | null;
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
@@ -27,7 +39,10 @@ interface CartState {
   updateQuantity: (productId: string, variantId: string | null | undefined, quantity: number) => void;
   removeItem: (productId: string, variantId: string | null | undefined) => void;
   clearCart: () => void;
+  applyCoupon: (coupon: AppliedCoupon) => void;
+  removeCoupon: () => void;
   subtotal: () => number;
+  getDiscountAmount: () => number;
   totalItems: () => number;
   syncWithBackend: () => Promise<void>;
 }
@@ -37,6 +52,7 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       isOpen: false,
+      appliedCoupon: null,
 
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
@@ -106,11 +122,41 @@ export const useCartStore = create<CartState>()(
       },
 
       clearCart: () => {
-        set({ items: [] });
+        set({ items: [], appliedCoupon: null });
+      },
+
+      applyCoupon: (coupon) => {
+        set({ appliedCoupon: coupon });
+      },
+
+      removeCoupon: () => {
+        set({ appliedCoupon: null });
       },
 
       subtotal: () => {
         return get().items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      },
+
+      getDiscountAmount: () => {
+        const { appliedCoupon } = get();
+        if (!appliedCoupon) return 0;
+        const currentSubtotal = get().subtotal();
+
+        if (appliedCoupon.minOrderAmount && currentSubtotal < appliedCoupon.minOrderAmount) {
+          return 0;
+        }
+
+        let discount = 0;
+        if (appliedCoupon.discountType === "PERCENTAGE") {
+          discount = (currentSubtotal * appliedCoupon.discountValue) / 100;
+          if (appliedCoupon.maxDiscount) {
+            discount = Math.min(discount, appliedCoupon.maxDiscount);
+          }
+        } else {
+          discount = Math.min(currentSubtotal, appliedCoupon.discountValue);
+        }
+
+        return Math.min(discount, currentSubtotal);
       },
 
       totalItems: () => {
@@ -136,7 +182,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "banglacart-cart",
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ items: state.items, appliedCoupon: state.appliedCoupon }),
     }
   )
 );
