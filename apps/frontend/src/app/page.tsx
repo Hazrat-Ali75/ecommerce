@@ -69,18 +69,21 @@ export default async function HomePage() {
         {/* 4. FEATURED BANGLADESHI FASHION */}
         {fashionProducts.length > 0 && (
           <section className="space-y-4 sm:space-y-6">
-            <div className="flex items-end justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-sm sm:text-lg md:text-xl font-extrabold text-gray-900 tracking-tight truncate">
+            <div className="flex items-end justify-between gap-2 border-b pb-4">
+              <div>
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary block mb-1">
+                  Festive & Everyday Elegance
+                </span>
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
                   Authentic Bangladeshi Fashion
                 </h2>
               </div>
               <Link
                 href="/shop?category=fashion-apparel"
-                className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-primary hover:underline shrink-0 pb-0.5 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-emerald-700 transition-colors pb-1 group"
               >
                 <span>Explore Collection</span>
-                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
@@ -95,18 +98,21 @@ export default async function HomePage() {
         {/* 5. TRENDING FOOTWEAR & SNEAKERS */}
         {footwearProducts.length > 0 && (
           <section className="space-y-4 sm:space-y-6">
-            <div className="flex items-end justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-sm sm:text-lg md:text-xl font-extrabold text-gray-900 tracking-tight truncate">
+            <div className="flex items-end justify-between gap-2 border-b pb-4">
+              <div>
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary block mb-1">
+                  Genuine Leather & Sport
+                </span>
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
                   Trending Footwear & Sneakers
                 </h2>
               </div>
               <Link
                 href="/shop?category=footwear-sneakers"
-                className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-primary hover:underline shrink-0 pb-0.5 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-emerald-700 transition-colors pb-1 group"
               >
                 <span>Browse All Shoes</span>
-                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
@@ -121,18 +127,21 @@ export default async function HomePage() {
         {/* 6. SMART ELECTRONICS & GADGETS */}
         {electronicsProducts.length > 0 && (
           <section className="space-y-4 sm:space-y-6">
-            <div className="flex items-end justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-sm sm:text-lg md:text-xl font-extrabold text-gray-900 tracking-tight truncate">
+            <div className="flex items-end justify-between gap-2 border-b pb-4">
+              <div>
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary block mb-1">
+                  100% Original Sourced
+                </span>
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
                   Electronics & Smart Gadgets
                 </h2>
               </div>
               <Link
                 href="/shop?category=electronics-gadgets"
-                className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-primary hover:underline shrink-0 pb-0.5 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-emerald-700 transition-colors pb-1 group"
               >
                 <span>View All Gadgets</span>
-                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
@@ -148,30 +157,32 @@ export default async function HomePage() {
         <ReviewShowcase />
 
         {/* 8. BANGLADESH LOGISTICS & ORDER TRACKING BANNER */}
-        <section className="bg-primary text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-lg">
-          <div className="relative z-10 max-w-xl space-y-2.5 sm:space-y-3.5">
-            <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-secondary block">
-              Nationwide Reliable Delivery
+        <section className="bg-gradient-to-r from-emerald-900 via-primary to-emerald-950 text-white rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-xl border border-emerald-800/50">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 blur-3xl pointer-events-none" />
+          <div className="relative z-10 max-w-xl space-y-3 sm:space-y-4">
+            <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-emerald-200 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+              Nationwide Delivery Network
             </span>
-            <h2 className="text-base sm:text-2xl md:text-3xl font-extrabold leading-snug">
-              Delivering across all 64 districts in Bangladesh
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
+              Delivering to all 64 districts across Bangladesh
             </h2>
-            <p className="text-[11px] sm:text-xs text-white/85 leading-relaxed">
-              Inside Dhaka ৳60 (24–48 hours) • Outside Dhaka ৳120 (3–5 days). Track your order status in real time anytime using your order number.
+            <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+              Inside Dhaka <span className="font-bold text-white">৳60</span> (24–48 hours) • Outside Dhaka{" "}
+              <span className="font-bold text-white">৳120</span> (3–5 days). Enjoy seamless Cash on Delivery and live consignment tracking.
             </p>
-            <div className="pt-1.5 flex flex-wrap gap-2.5">
+            <div className="pt-2 flex flex-wrap gap-3">
               <Link
                 href="/track"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-white text-primary text-[11px] sm:text-xs font-bold hover:bg-gray-100 transition-colors shadow-xs"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-emerald-950 text-xs sm:text-sm font-bold hover:bg-gray-100 transition-colors shadow-md"
               >
                 <span>Track Your Parcel</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-primary-foreground/15 border border-white/25 text-white text-[11px] sm:text-xs font-semibold hover:bg-primary-foreground/25 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-semibold transition-colors"
               >
-                <span>Start Shopping</span>
+                <span>Explore Catalog</span>
               </Link>
             </div>
           </div>

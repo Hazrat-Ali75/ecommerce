@@ -16,6 +16,7 @@ import {
   ArrowRight,
   MapPin,
   RefreshCw,
+  Sparkles,
 } from "lucide-react";
 
 interface RecentOrder {
@@ -63,31 +64,32 @@ export default function AdminDashboardPage() {
       const res = await apiClient.get("/analytics/summary");
       return res.data;
     },
-    refetchInterval: 30000, // Auto-refresh every 30 seconds
+    refetchInterval: 30000, // 30s auto-refresh
   });
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-pulse">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-32 bg-white rounded-2xl border p-6 animate-pulse" />
+            <div key={i} className="h-32 bg-white rounded-3xl border border-stone-200 p-6" />
           ))}
         </div>
-        <div className="h-64 bg-white rounded-2xl border animate-pulse" />
+        <div className="h-64 bg-white rounded-3xl border border-stone-200" />
       </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center text-red-700 max-w-xl mx-auto space-y-3">
-        <AlertTriangle className="w-8 h-8 text-red-500 mx-auto" />
-        <h3 className="text-base font-bold">Failed to load live analytics data</h3>
-        <p className="text-xs text-red-600">Please check your network connection or server status.</p>
+      <div className="bg-rose-50 border border-rose-200 rounded-3xl p-8 text-center text-rose-800 max-w-xl mx-auto space-y-3">
+        <AlertTriangle className="w-8 h-8 text-rose-600 mx-auto" />
+        <h3 className="text-base font-bold font-display">Failed to load live analytics data</h3>
+        <p className="text-xs text-rose-700">Please check your network connection or server status.</p>
         <button
+          type="button"
           onClick={() => refetch()}
-          className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold hover:bg-red-700"
+          className="px-5 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold hover:bg-rose-700 transition-colors"
         >
           Retry
         </button>
@@ -105,95 +107,112 @@ export default function AdminDashboardPage() {
       {/* Header bar with live indicator */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900">Operations Overview</h2>
-          <p className="text-xs text-gray-500">Live operational data and order metrics across Bangladesh</p>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>BanglaShop Executive Control</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 tracking-tight">
+            Operations & Logistics Overview
+          </h2>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Real-time sales, order volume, and fulfillment metrics across all 64 districts
+          </p>
         </div>
         <button
+          type="button"
           onClick={() => refetch()}
           disabled={isFetching}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-xs"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-stone-200 hover:border-emerald-600 rounded-xl text-xs font-bold text-stone-700 hover:bg-stone-50 shadow-xs transition-colors"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-primary" : ""}`} />
-          <span>Refresh Data</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-emerald-700" : ""}`} />
+          <span>Refresh Metrics</span>
         </button>
       </div>
 
       {/* 1. EXECUTIVE KPI CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Sales */}
-        <div className="bg-white border rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Sales</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+        <div className="bg-white border border-stone-200/80 rounded-3xl p-5 sm:p-6 shadow-card space-y-3">
+          <div className="flex items-center justify-between text-stone-500">
+            <span className="text-xs font-bold uppercase tracking-wider">Total Sales (BDT)</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-base shadow-xs">
               ৳
             </div>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
+            <p className="text-2xl sm:text-3xl font-extrabold font-display text-stone-900 tracking-tight">
               {formatBDT(data.totalRevenue)}
             </p>
-            <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
-              <TrendingUp className="w-3 h-3 text-emerald-600" />
+            <p className="text-[11px] text-stone-500 mt-1 flex items-center gap-1">
+              <TrendingUp className="w-3 h-3 text-emerald-700" />
               <span>Paid & delivered orders</span>
             </p>
           </div>
         </div>
 
         {/* Total Orders */}
-        <div className="bg-white border rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-gray-500">
+        <div className="bg-white border border-stone-200/80 rounded-3xl p-5 sm:p-6 shadow-card space-y-3">
+          <div className="flex items-center justify-between text-stone-500">
             <span className="text-xs font-bold uppercase tracking-wider">Total Orders</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
+            <p className="text-2xl sm:text-3xl font-extrabold font-display text-stone-900 tracking-tight">
               {data.totalOrders}
             </p>
-            <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
+            <p className="text-[11px] text-stone-500 mt-1 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3 text-blue-600" />
-              <span>{data.deliveredOrders} fulfilled successfully</span>
+              <span>{data.deliveredOrders} delivered successfully</span>
             </p>
           </div>
         </div>
 
         {/* Pending Action Orders */}
-        <div className={`border rounded-2xl p-5 shadow-xs space-y-3 ${
-          data.pendingOrders > 0 ? "bg-amber-50/50 border-amber-200" : "bg-white"
-        }`}>
-          <div className="flex items-center justify-between text-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Pending Orders</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+        <div
+          className={`border rounded-3xl p-5 sm:p-6 shadow-card space-y-3 ${
+            data.pendingOrders > 0
+              ? "bg-amber-50/60 border-amber-200/80"
+              : "bg-white border-stone-200/80"
+          }`}
+        >
+          <div className="flex items-center justify-between text-stone-500">
+            <span className="text-xs font-bold uppercase tracking-wider">Pending Fulfillment</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shadow-xs">
               <Clock className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-900 tracking-tight">
+            <p className="text-2xl sm:text-3xl font-extrabold font-display text-amber-950 tracking-tight">
               {data.pendingOrders}
             </p>
-            <p className="text-[11px] text-amber-700 font-medium mt-1">
+            <p className="text-[11px] text-amber-800 font-medium mt-1">
               {data.pendingOrders > 0 ? "Requires confirmation & dispatch" : "All orders up to date"}
             </p>
           </div>
         </div>
 
         {/* Low Stock Alert */}
-        <div className={`border rounded-2xl p-5 shadow-xs space-y-3 ${
-          data.lowStockCount > 0 ? "bg-red-50/50 border-red-200" : "bg-white"
-        }`}>
-          <div className="flex items-center justify-between text-gray-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Low Stock Variants</span>
-            <div className="w-8 h-8 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
+        <div
+          className={`border rounded-3xl p-5 sm:p-6 shadow-card space-y-3 ${
+            data.lowStockCount > 0
+              ? "bg-rose-50/60 border-rose-200/80"
+              : "bg-white border-stone-200/80"
+          }`}
+        >
+          <div className="flex items-center justify-between text-stone-500">
+            <span className="text-xs font-bold uppercase tracking-wider">Low Stock Alert</span>
+            <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center shadow-xs">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-red-900 tracking-tight">
+            <p className="text-2xl sm:text-3xl font-extrabold font-display text-rose-950 tracking-tight">
               {data.lowStockCount}
             </p>
-            <p className="text-[11px] text-red-700 font-medium mt-1">
-              {data.lowStockCount > 0 ? "≤ 5 items remaining in stock" : "Inventory levels healthy"}
+            <p className="text-[11px] text-rose-800 font-medium mt-1">
+              {data.lowStockCount > 0 ? "≤ 5 units remaining in stock" : "Inventory levels healthy"}
             </p>
           </div>
         </div>
@@ -202,22 +221,22 @@ export default function AdminDashboardPage() {
       {/* 2. CHARTS & LOGISTICS SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 14-Day Revenue Timeline */}
-        <div className="lg:col-span-2 bg-white border rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-2 bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-gray-900">14-Day Revenue Trend</h3>
-              <p className="text-xs text-gray-500">Daily sales revenue in Bangladeshi Taka (৳)</p>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900">
+                14-Day Revenue Trend
+              </h3>
+              <p className="text-xs text-stone-500">Daily sales revenue in Bangladeshi Taka (৳)</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100/80 px-2.5 py-1 rounded-lg">
-                Last 14 Days
-              </span>
-            </div>
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-3 py-1 rounded-full">
+              Last 14 Days
+            </span>
           </div>
 
-          {(!data.dailyRevenue || data.dailyRevenue.length === 0) ? (
-            <div className="h-48 flex items-center justify-center text-xs text-gray-400">
-              No revenue history available for the last 14 days
+          {!data.dailyRevenue || data.dailyRevenue.length === 0 ? (
+            <div className="h-48 flex items-center justify-center text-xs text-stone-400">
+              No revenue history recorded yet for the last 14 days
             </div>
           ) : (
             <div className="h-48 flex items-stretch gap-1 sm:gap-2 pt-8 pb-1">
@@ -233,27 +252,27 @@ export default function AdminDashboardPage() {
                     className="h-full flex-1 flex flex-col items-center group relative min-w-0"
                   >
                     {/* Tooltip */}
-                    <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-[11px] py-1 px-2.5 rounded-lg pointer-events-none whitespace-nowrap z-20 shadow-lg font-medium">
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-stone-900 text-white text-[11px] py-1 px-2.5 rounded-xl pointer-events-none whitespace-nowrap z-20 shadow-xl font-medium">
                       <span className="font-bold">{d.date}:</span> {formatBDT(d.revenue)}
-                      <span className="text-gray-300 ml-1 font-normal">
+                      <span className="text-stone-300 ml-1 font-normal">
                         ({d.ordersCount} {d.ordersCount === 1 ? "order" : "orders"})
                       </span>
                     </div>
 
-                    {/* Bar track container */}
+                    {/* Bar track */}
                     <div className="w-full flex-1 flex items-end justify-center">
                       <div
                         style={{ height: `${heightPct}%` }}
-                        className={`w-full max-w-[28px] rounded-t-md transition-all duration-300 ${
+                        className={`w-full max-w-[28px] rounded-t-lg transition-all duration-300 ${
                           d.revenue > 0
-                            ? "bg-emerald-600 group-hover:bg-emerald-500 shadow-xs"
-                            : "bg-gray-100 group-hover:bg-gray-200"
+                            ? "bg-emerald-700 group-hover:bg-emerald-600 shadow-xs"
+                            : "bg-stone-100 group-hover:bg-stone-200"
                         }`}
                       />
                     </div>
 
                     {/* Date Label */}
-                    <span className="text-[10px] text-gray-400 group-hover:text-gray-700 font-medium truncate w-full text-center mt-2 shrink-0">
+                    <span className="text-[10px] text-stone-400 group-hover:text-stone-700 font-medium truncate w-full text-center mt-2 shrink-0">
                       {dayLabel}
                     </span>
                   </div>
@@ -264,25 +283,29 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Logistics & Delivery Distribution */}
-        <div className="bg-white border rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-5">
           <div>
-            <h3 className="text-sm font-bold text-gray-900">Bangladeshi Logistics Distribution</h3>
-            <p className="text-xs text-gray-500">Tiered delivery volume across zones</p>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900">
+              Bangladeshi Logistics Distribution
+            </h3>
+            <p className="text-xs text-stone-500">Tiered delivery volume across zones</p>
           </div>
 
           <div className="space-y-4">
             {/* Inside Dhaka */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="flex items-center gap-1.5 text-gray-700">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                  Inside Dhaka (৳60)
+                <span className="flex items-center gap-1.5 text-stone-700">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Inside Dhaka (৳60)</span>
                 </span>
-                <span className="font-bold text-gray-900">{data.ordersByZone.insideDhaka} orders ({insideDhakaPct}%)</span>
+                <span className="font-bold text-stone-900">
+                  {data.ordersByZone.insideDhaka} orders ({insideDhakaPct}%)
+                </span>
               </div>
-              <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-emerald-600 rounded-full"
+                  className="h-full bg-emerald-700 rounded-full"
                   style={{ width: `${insideDhakaPct}%` }}
                 />
               </div>
@@ -291,13 +314,15 @@ export default function AdminDashboardPage() {
             {/* Outside Dhaka */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="flex items-center gap-1.5 text-gray-700">
+                <span className="flex items-center gap-1.5 text-stone-700">
                   <Truck className="w-3.5 h-3.5 text-blue-600" />
-                  Outside Dhaka (৳120)
+                  <span>Outside Dhaka (৳120)</span>
                 </span>
-                <span className="font-bold text-gray-900">{data.ordersByZone.outsideDhaka} orders ({outsideDhakaPct}%)</span>
+                <span className="font-bold text-stone-900">
+                  {data.ordersByZone.outsideDhaka} orders ({outsideDhakaPct}%)
+                </span>
               </div>
-              <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-600 rounded-full"
                   style={{ width: `${outsideDhakaPct}%` }}
@@ -307,32 +332,34 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Status Breakdown Pills */}
-          <div className="pt-2 border-t space-y-2">
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Status Breakdown</span>
+          <div className="pt-2 border-t border-stone-100 space-y-2">
+            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+              Status Breakdown
+            </span>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Pending</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Pending</span>
                 <span className="font-bold text-amber-700">{data.ordersByStatus["PENDING"] || 0}</span>
               </div>
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Confirmed</span>
-                <span className="font-bold text-blue-700">{data.ordersByStatus["CONFIRMED"] || 0}</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Confirmed</span>
+                <span className="font-bold text-teal-700">{data.ordersByStatus["CONFIRMED"] || 0}</span>
               </div>
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Processing</span>
-                <span className="font-bold text-purple-700">{data.ordersByStatus["PROCESSING"] || 0}</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Processing</span>
+                <span className="font-bold text-blue-700">{data.ordersByStatus["PROCESSING"] || 0}</span>
               </div>
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Shipped</span>
-                <span className="font-bold text-indigo-700">{data.ordersByStatus["SHIPPED"] || 0}</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Shipped</span>
+                <span className="font-bold text-purple-700">{data.ordersByStatus["SHIPPED"] || 0}</span>
               </div>
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Delivered</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Delivered</span>
                 <span className="font-bold text-emerald-700">{data.ordersByStatus["DELIVERED"] || 0}</span>
               </div>
-              <div className="p-2 rounded-xl bg-gray-50 flex items-center justify-between">
-                <span className="text-gray-600">Cancelled</span>
-                <span className="font-bold text-red-700">{data.ordersByStatus["CANCELLED"] || 0}</span>
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
+                <span className="text-stone-600">Cancelled</span>
+                <span className="font-bold text-rose-700">{data.ordersByStatus["CANCELLED"] || 0}</span>
               </div>
             </div>
           </div>
@@ -342,15 +369,17 @@ export default function AdminDashboardPage() {
       {/* 3. RECENT ORDERS & TOP PRODUCTS */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders Table */}
-        <div className="lg:col-span-2 bg-white border rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-2 bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Recent Customer Orders</h3>
-              <p className="text-xs text-gray-500">Latest orders placed across Bangladesh</p>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900">
+                Recent Customer Orders
+              </h3>
+              <p className="text-xs text-stone-500">Latest orders placed nationwide</p>
             </div>
             <Link
               href="/admin/orders"
-              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700"
+              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-800"
             >
               <span>Manage All</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -359,7 +388,7 @@ export default function AdminDashboardPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50 text-gray-600 font-semibold border-y">
+              <thead className="bg-stone-50 text-stone-600 font-semibold border-y border-stone-100">
                 <tr>
                   <th className="py-2.5 px-3">Order Number</th>
                   <th className="py-2.5 px-3">Customer</th>
@@ -368,41 +397,41 @@ export default function AdminDashboardPage() {
                   <th className="py-2.5 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-stone-100">
                 {data.recentOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-gray-400">
+                    <td colSpan={5} className="py-8 text-center text-stone-400">
                       No orders placed yet.
                     </td>
                   </tr>
                 ) : (
                   data.recentOrders.map((ord) => (
-                    <tr key={ord.id} className="hover:bg-gray-50/60 transition-colors">
-                      <td className="py-3 px-3 font-mono font-bold text-gray-900">
-                        <Link href="/admin/orders" className="hover:text-primary">
+                    <tr key={ord.id} className="hover:bg-stone-50/60 transition-colors">
+                      <td className="py-3 px-3 font-mono font-bold text-stone-900">
+                        <Link href="/admin/orders" className="hover:text-emerald-700">
                           {ord.orderNumber}
                         </Link>
                       </td>
                       <td className="py-3 px-3">
-                        <p className="font-semibold text-gray-900">{ord.customerName}</p>
-                        <p className="text-[11px] text-gray-500">{ord.customerPhone}</p>
+                        <p className="font-semibold text-stone-900">{ord.customerName}</p>
+                        <p className="text-[11px] text-stone-500">{ord.customerPhone}</p>
                       </td>
-                      <td className="py-3 px-3 text-gray-600">
+                      <td className="py-3 px-3 text-stone-600">
                         {ord.deliveryZone === "INSIDE_DHAKA" ? "Inside Dhaka" : "Outside Dhaka"}
                       </td>
-                      <td className="py-3 px-3 font-bold text-gray-900">
+                      <td className="py-3 px-3 font-extrabold text-stone-900">
                         {formatBDT(ord.totalAmount)}
                       </td>
                       <td className="py-3 px-3">
                         <span
-                          className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                             ord.orderStatus === "DELIVERED"
-                              ? "bg-emerald-100 text-emerald-800"
+                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                               : ord.orderStatus === "PENDING"
-                              ? "bg-amber-100 text-amber-800"
+                              ? "bg-amber-50 text-amber-800 border border-amber-200"
                               : ord.orderStatus === "CANCELLED"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-blue-100 text-blue-800"
+                              ? "bg-rose-50 text-rose-800 border border-rose-200"
+                              : "bg-blue-50 text-blue-800 border border-blue-200"
                           }`}
                         >
                           {ord.orderStatus}
@@ -416,34 +445,41 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Top Selling Products */}
-        <div className="bg-white border rounded-2xl p-6 shadow-xs space-y-4">
+        {/* Top Performing Products */}
+        <div className="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-gray-900">Top Performing Products</h3>
-            <p className="text-xs text-gray-500">Highest volume items</p>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-stone-900">
+              Top Performing Products
+            </h3>
+            <p className="text-xs text-stone-500">Highest volume items</p>
           </div>
 
           <div className="space-y-3">
             {data.topProducts.length === 0 ? (
-              <p className="py-8 text-center text-xs text-gray-400">No sales data yet.</p>
+              <p className="py-8 text-center text-xs text-stone-400">No sales data recorded yet.</p>
             ) : (
               data.topProducts.map((p) => (
-                <div key={p.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 transition-colors">
-                  <div className="relative w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 border">
+                <div
+                  key={p.id}
+                  className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-stone-50 border border-transparent hover:border-stone-200 transition-colors"
+                >
+                  <div className="relative w-12 h-12 rounded-xl bg-stone-50 overflow-hidden shrink-0 border border-stone-200">
                     {p.image ? (
                       <Image src={p.image} alt={p.title} fill className="object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <div className="w-full h-full flex items-center justify-center text-stone-400">
                         <Package className="w-5 h-5" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-gray-900 truncate">{p.title}</p>
-                    <p className="text-[11px] text-gray-500">{p.brand} • {p.totalQuantitySold} sold</p>
+                    <p className="text-xs font-bold text-stone-900 truncate">{p.title}</p>
+                    <p className="text-[11px] text-stone-500">
+                      {p.brand} • {p.totalQuantitySold} sold
+                    </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-bold text-gray-900">{formatBDT(p.totalRevenue)}</p>
+                    <p className="text-xs font-extrabold text-stone-900">{formatBDT(p.totalRevenue)}</p>
                   </div>
                 </div>
               ))

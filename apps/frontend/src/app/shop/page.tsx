@@ -201,13 +201,13 @@ function ShopContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* 1. TOP HEADING */}
-      <div className="space-y-1">
+      <div className="space-y-1.5 border-b pb-4">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
-            {selectedCategoryObj?.slug ? selectedCategoryObj.name : "All Products"}
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
+            {selectedCategoryObj?.slug ? selectedCategoryObj.name : "All Collections"}
           </h1>
-          <span className="text-xs sm:text-sm font-semibold text-gray-500">
-            {data ? `${data.pagination.total} Authentic Products in Catalog` : "Loading..."}
+          <span className="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/60">
+            {data ? `${data.pagination.total} Authentic Products` : "Loading catalog..."}
           </span>
         </div>
         <p className="text-xs sm:text-sm text-gray-500">
@@ -216,7 +216,7 @@ function ShopContent() {
       </div>
 
       {/* 2. THREE-SECTION DIV (LEFT: FILTER BUTTON, MIDDLE: PRICE RANGE, RIGHT: ARRIVAL TIME / SORT) */}
-      <div className="bg-white border rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xs">
+      <div className="bg-white border border-gray-200/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 sm:gap-4 items-center">
           {/* LEFT SECTION (4 cols): Filter Input & Trigger Button */}
           <div className="sm:col-span-1 md:col-span-4">
@@ -224,7 +224,7 @@ function ShopContent() {
               onClick={() => setFilterModalOpen(true)}
               className={`w-full flex items-center justify-between py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold transition-all shadow-xs ${
                 currentCategory || filterModalOpen
-                  ? "bg-primary text-white border-primary"
+                  ? "bg-primary text-white border-primary shadow-emerald-950/20"
                   : "bg-gray-50 hover:bg-gray-100 text-gray-800 border-gray-200"
               }`}
             >
@@ -233,12 +233,12 @@ function ShopContent() {
                 <span className="truncate">
                   {selectedCategoryObj?.slug
                     ? selectedCategoryObj.name
-                    : "Filter by Category"}
+                    : "Filter Collections"}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 {activeFiltersCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-secondary text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center">
+                  <span className="w-5 h-5 rounded-full bg-accent text-white text-[10px] sm:text-[11px] font-bold flex items-center justify-center">
                     {activeFiltersCount}
                   </span>
                 )}

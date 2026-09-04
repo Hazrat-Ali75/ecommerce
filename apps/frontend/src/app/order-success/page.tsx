@@ -1,59 +1,115 @@
 "use client";
 
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, Package, ArrowRight, Truck } from "lucide-react";
-import { Suspense } from "react";
+import {
+  CheckCircle2,
+  Package,
+  ArrowRight,
+  Truck,
+  Copy,
+  Check,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+} from "lucide-react";
+import { toast } from "sonner";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get("orderNumber") || "BD-XXXXXX";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyOrderNumber = () => {
+    navigator.clipboard.writeText(orderNumber);
+    setCopied(true);
+    toast.success(`Copied order number ${orderNumber} to clipboard!`);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-      <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="max-w-2xl mx-auto px-4 py-16 sm:py-24 text-center">
+      {/* Success Animated Badge */}
+      <div className="w-20 h-20 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xs border border-emerald-100 animate-in zoom-in-50 duration-300">
         <CheckCircle2 className="w-10 h-10" />
       </div>
 
-      <span className="text-xs font-bold uppercase tracking-wider text-primary mb-2 block">
-        Order Confirmed
-      </span>
+      <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700 mb-2">
+        <Sparkles className="w-3.5 h-3.5" />
+        <span>BanglaShop Order Confirmed</span>
+      </div>
 
-      <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-stone-900 mb-3 tracking-tight">
         Thank you for your order!
       </h1>
 
-      <p className="text-xs sm:text-sm text-gray-600 mb-8 max-w-md mx-auto">
-        Your order has been recorded. We have sent a confirmation email with all details and tracking updates.
+      <p className="text-xs sm:text-sm text-stone-500 mb-8 max-w-md mx-auto leading-relaxed">
+        Your order has been safely placed. We have dispatched a confirmation email and SMS with all tracking details.
       </p>
 
-      <div className="bg-gray-50 border rounded-2xl p-6 mb-8 text-left space-y-4">
-        <div className="flex items-center justify-between border-b pb-4">
-          <span className="text-xs text-gray-500 font-semibold">Order Number</span>
-          <span className="font-mono text-sm font-bold text-primary">{orderNumber}</span>
+      {/* Order Info Card */}
+      <div className="bg-stone-50/80 border border-stone-200/80 rounded-3xl p-6 sm:p-7 mb-8 text-left space-y-4 shadow-card">
+        <div className="flex items-center justify-between border-b border-stone-200 pb-4">
+          <div>
+            <span className="text-xs text-stone-500 font-semibold block">Order Reference</span>
+            <span className="font-mono text-base sm:text-lg font-extrabold text-stone-900">
+              {orderNumber}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleCopyOrderNumber}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-stone-200 hover:border-emerald-600 rounded-xl text-xs font-bold text-stone-700 transition-colors shadow-xs"
+          >
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-700" />
+                <span className="text-emerald-700">Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5 text-stone-400" />
+                <span>Copy ID</span>
+              </>
+            )}
+          </button>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-gray-600">
-          <Truck className="w-4 h-4 text-primary shrink-0" />
-          <span>
-            <strong>Delivery Window:</strong> Inside Dhaka (24–48 hours) • Outside Dhaka (3–5 days across 64 districts)
-          </span>
+        <div className="flex items-start gap-3 text-xs text-stone-600 pt-1">
+          <Truck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-bold text-stone-900 block">Bangladeshi Delivery Windows:</span>
+            <span>
+              <strong>Inside Dhaka:</strong> Flat ৳60 (24–48 hours) •{" "}
+              <strong>Outside Dhaka:</strong> Flat ৳120 (3–5 days across 64 districts)
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 pt-3 border-t border-stone-200 text-[11px] text-stone-500">
+          <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+          <span>Cash on Delivery riders accept cash payment upon physical parcel inspection.</span>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      {/* Action CTAs */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
         <Link
-          href={`/track?orderNumber=${orderNumber}`}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md shadow-primary/20"
+          href={`/track?orderNumber=${encodeURIComponent(orderNumber)}`}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-md shadow-emerald-700/20 active:scale-[0.99]"
         >
-          Track This Order
+          <Package className="w-4 h-4" />
+          <span>Track Live Progress</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
         <Link
           href="/shop"
-          className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white border border-stone-200 hover:bg-stone-50 text-xs font-bold uppercase tracking-wider text-stone-800 rounded-2xl transition-colors shadow-xs"
         >
-          Continue Shopping
+          <ShoppingBag className="w-4 h-4 text-stone-500" />
+          <span>Continue Shopping</span>
         </Link>
       </div>
     </div>
@@ -62,7 +118,13 @@ function OrderSuccessContent() {
 
 export default function OrderSuccessPage() {
   return (
-    <Suspense fallback={<div className="max-w-2xl mx-auto p-12 text-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="max-w-2xl mx-auto p-16 text-center text-sm font-semibold text-stone-500">
+          Loading order confirmation...
+        </div>
+      }
+    >
       <OrderSuccessContent />
     </Suspense>
   );

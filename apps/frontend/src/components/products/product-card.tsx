@@ -63,7 +63,7 @@ export function ProductCard({
   };
 
   return (
-    <div className="group relative bg-white border border-gray-100 hover:border-gray-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col">
+    <div className="group relative bg-white border border-gray-200/80 hover:border-emerald-500/50 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between">
       {/* Thumbnail Container */}
       <Link href={`/product/${slug}`} className="relative block aspect-square bg-gray-50 overflow-hidden">
         <Image
@@ -76,15 +76,15 @@ export function ProductCard({
 
         {/* Discount Badge */}
         {hasDiscount && (
-          <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-red-600 text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+          <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-bdred text-white text-[10px] sm:text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-xs tracking-tight">
             -{discountPercent}% OFF
           </span>
         )}
 
         {/* Out of Stock Badge */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center">
-            <span className="bg-white text-gray-900 text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 text-center">
+            <span className="bg-white/95 text-gray-900 text-[10px] sm:text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
               Out of Stock
             </span>
           </div>
@@ -93,23 +93,29 @@ export function ProductCard({
         {/* Wishlist Button */}
         <button
           onClick={handleWishlistClick}
-          className={`absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-full backdrop-blur-xs transition-all ${
+          className={`absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-full backdrop-blur-md transition-all shadow-xs ${
             inWishlist
-              ? "bg-red-50 text-red-500 hover:bg-red-100"
-              : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-500"
+              ? "bg-rose-50 text-rose-600 hover:bg-rose-100"
+              : "bg-white/90 text-gray-600 hover:bg-white hover:text-rose-600"
           }`}
           aria-label="Add to wishlist"
         >
-          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${inWishlist ? "fill-red-500" : ""}`} />
+          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${inWishlist ? "fill-rose-600 text-rose-600" : ""}`} />
         </button>
       </Link>
 
       {/* Info Container */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
         <div>
-          <div className="flex items-center justify-between text-[11px] sm:text-xs text-gray-500 mb-1">
-            <span className="font-semibold text-primary">{brand}</span>
-            {category && <span className="text-gray-400 truncate max-w-[100px]">{category.name}</span>}
+          <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1 gap-1">
+            <span className="font-bold text-primary tracking-wider uppercase text-[10px] sm:text-[11px] truncate">
+              {brand}
+            </span>
+            {category && (
+              <span className="text-gray-400 text-[10px] sm:text-[11px] truncate max-w-[90px]">
+                {category.name}
+              </span>
+            )}
           </div>
 
           <h3 className="text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
@@ -117,14 +123,14 @@ export function ProductCard({
           </h3>
         </div>
 
-        <div className="mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t border-gray-50 flex items-center justify-between">
+        <div className="pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
           <div>
             <div className="flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-sm sm:text-base font-bold text-gray-900">
+              <span className="text-sm sm:text-base font-extrabold text-gray-900">
                 {formatBDT(hasDiscount ? numDiscountPrice : numBasePrice)}
               </span>
               {hasDiscount && (
-                <span className="text-[11px] sm:text-xs text-gray-400 line-through">
+                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
                   {formatBDT(numBasePrice)}
                 </span>
               )}
@@ -133,7 +139,7 @@ export function ProductCard({
 
           <Link
             href={`/product/${slug}`}
-            className="p-1.5 sm:p-2 rounded-xl bg-gray-100 group-hover:bg-primary text-gray-700 group-hover:text-white transition-colors shrink-0 ml-1"
+            className="p-2 sm:p-2.5 rounded-xl bg-emerald-50 text-primary group-hover:bg-primary group-hover:text-white transition-all shrink-0 shadow-xs"
             aria-label="View product details"
           >
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

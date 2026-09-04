@@ -18,6 +18,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-montserrat)", "Montserrat", "system-ui", "sans-serif"],
+        display: ["var(--font-cormorant)", "Cormorant Garamond", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,22 +54,35 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Bangladeshi Festive Palette Accents
+        // Bangladeshi Festive & Luxury Palette Accents
         bdgreen: {
           DEFAULT: "#006A4E",
           hover: "#00553E",
           light: "#E6F0EC",
+          dark: "#004230",
         },
         bdred: {
           DEFAULT: "#F42A41",
           hover: "#D61F34",
           light: "#FDEAEB",
         },
+        bdgold: {
+          DEFAULT: "#D97706",
+          hover: "#B45309",
+          light: "#FEF3C7",
+        },
+      },
+      boxShadow: {
+        "card-hover": "0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04)",
+        "elevation": "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)",
+        "glow-primary": "0 0 20px -3px rgba(5, 150, 105, 0.35)",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
       },
     },
   },

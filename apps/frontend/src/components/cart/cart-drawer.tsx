@@ -43,19 +43,20 @@ export function CartDrawer() {
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 divide-y">
             {items.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
+                <div className="w-16 h-16 bg-emerald-50 text-primary rounded-2xl flex items-center justify-center mb-4 shadow-xs">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-1">Your cart is empty</h3>
-                <p className="text-xs sm:text-sm text-gray-500 mb-6">
-                  Explore our authentic Bangladeshi fashion, footwear, and gadgets collections.
+                <h3 className="text-base font-bold text-gray-900 mb-1">Your cart is empty</h3>
+                <p className="text-xs sm:text-sm text-gray-500 mb-6 max-w-xs leading-relaxed">
+                  Discover authentic Panjabi, Sarees, Sneakers, and Smart Gadgets on BanglaShop.
                 </p>
-                <button
+                <Link
+                  href="/shop"
                   onClick={closeCart}
-                  className="inline-flex items-center justify-center px-5 py-2.5 bg-primary text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-xs"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-xs"
                 >
-                  Start Shopping
-                </button>
+                  Explore Marketplace
+                </Link>
               </div>
             ) : (
               items.map((item) => {

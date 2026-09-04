@@ -112,29 +112,29 @@ export function HeroCarousel({ initialBanners }: { initialBanners?: BannerItem[]
                       </div>
                     )}
 
-                    <h1 className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both ease-out text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-snug sm:leading-tight tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+                    <h1 className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both ease-out font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                       {banner.title}
                     </h1>
 
                     {banner.subtitle && (
-                      <p className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both ease-out text-[11px] sm:text-sm md:text-base text-white/90 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] line-clamp-2 sm:line-clamp-none">
+                      <p className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both ease-out text-xs sm:text-sm md:text-base text-white/90 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] line-clamp-2 sm:line-clamp-none">
                         {banner.subtitle}
                       </p>
                     )}
 
-                    <div className="animate-in fade-in slide-in-from-bottom-3 duration-700 delay-450 fill-mode-both ease-out pt-1 sm:pt-2">
+                    <div className="animate-in fade-in slide-in-from-bottom-3 duration-700 delay-450 fill-mode-both ease-out pt-2 sm:pt-3">
                       <Link
                         href={banner.linkUrl}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-primary text-white text-[11px] sm:text-sm font-semibold sm:font-bold hover:bg-primary/90 transition-all transform hover:-translate-y-0.5 hover:scale-105 shadow-md shadow-primary/30 w-fit"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-primary text-white text-xs sm:text-sm font-bold hover:brightness-110 transition-all transform hover:-translate-y-0.5 shadow-lg shadow-emerald-950/40 w-fit"
                       >
-                        Shop Collection
-                        <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span>Explore Collection</span>
+                        <ArrowRight className="w-4 h-4" />
                       </Link>
                     </div>
                   </div>
                 ) : (
                   <div className="max-w-[260px] xs:max-w-[290px] sm:max-w-md md:max-w-xl space-y-2 opacity-0 pointer-events-none">
-                    <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white">
+                    <h1 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
                       {banner.title}
                     </h1>
                   </div>

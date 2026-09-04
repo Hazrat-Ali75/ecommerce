@@ -19,6 +19,10 @@ import {
   X,
   CheckCircle2,
   Loader2,
+  ShieldCheck,
+  RotateCcw,
+  Sparkles,
+  ChevronRight,
 } from "lucide-react";
 
 export default function CartPage() {
@@ -80,10 +84,10 @@ export default function CartPage() {
   if (!mounted) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-pulse">
-        <div className="h-8 bg-gray-200 rounded-lg w-48 mb-8" />
+        <div className="h-8 bg-stone-100 rounded-lg w-48 mb-8" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-8 h-64 bg-gray-100 rounded-2xl" />
-          <div className="lg:col-span-4 h-64 bg-gray-100 rounded-2xl" />
+          <div className="lg:col-span-8 h-64 bg-stone-100 rounded-3xl" />
+          <div className="lg:col-span-4 h-64 bg-stone-100 rounded-3xl" />
         </div>
       </div>
     );
@@ -91,99 +95,161 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
-          <ShoppingBag className="w-8 h-8" />
+      <div className="max-w-4xl mx-auto px-4 py-24 text-center">
+        <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5 text-emerald-700 shadow-xs">
+          <ShoppingBag className="w-10 h-10" />
         </div>
-        <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">Your Shopping Cart is Empty</h1>
-        <p className="text-xs sm:text-sm text-gray-500 mb-6">
-          Explore our authentic Bangladeshi fashion, footwear, and electronics.
+        <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 mb-3">
+          Your Shopping Cart is Empty
+        </h1>
+        <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto mb-8 leading-relaxed">
+          Looks like you haven&apos;t added anything to your cart yet. Explore our authentic Bangladeshi apparel, footwear, and gadgets.
         </p>
-        <Link href="/shop" className="px-6 py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl">
-          Browse Catalog
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-2 px-7 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-md shadow-emerald-700/20"
+        >
+          <span>Explore BanglaShop</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     );
   }
 
+  const currentSubtotal = subtotal();
+  const currentDiscount = getDiscountAmount();
+  const calculatedTotal = Math.max(0, currentSubtotal - currentDiscount);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      <div className="flex items-center justify-between pb-6 border-b mb-8">
+      {/* Breadcrumbs */}
+      <nav className="flex items-center gap-1.5 text-xs text-stone-500 mb-6 sm:mb-8">
+        <Link href="/" className="hover:text-emerald-700 transition-colors font-medium">
+          Home
+        </Link>
+        <ChevronRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+        <Link href="/shop" className="hover:text-emerald-700 transition-colors font-medium">
+          Shop
+        </Link>
+        <ChevronRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+        <span className="text-stone-900 font-semibold">Shopping Cart</span>
+      </nav>
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-stone-200 mb-8 gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight">
-            Shopping Cart ({totalItems()})
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>BanglaShop Bag</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-stone-900 tracking-tight">
+            Shopping Cart ({totalItems()} {totalItems() === 1 ? "item" : "items"})
           </h1>
-          <p className="text-xs text-gray-500 mt-1">Review your selected items before checkout</p>
+          <p className="text-xs sm:text-sm text-stone-500 mt-1">
+            Review your authentic items before moving to delivery & checkout
+          </p>
         </div>
         <button
-          onClick={clearCart}
-          className="text-xs font-semibold text-red-600 hover:text-red-700"
+          type="button"
+          onClick={() => {
+            if (confirm("Are you sure you want to clear your shopping cart?")) {
+              clearCart();
+            }
+          }}
+          className="text-xs font-semibold text-rose-600 hover:text-rose-700 self-start sm:self-auto hover:underline"
         >
           Clear Cart
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-        {/* Items List (8 cols) */}
-        <div className="lg:col-span-8 divide-y divide-gray-100 border-t border-b">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* ========================================================================= */}
+        {/* LEFT: CART ITEMS LIST (8 cols)                                            */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-8 divide-y divide-stone-100 border-t border-b border-stone-200">
           {items.map((item) => (
-            <div key={`${item.productId}-${item.variantId}`} className="py-4 sm:py-5 flex gap-3 sm:gap-6 items-center">
-              <div className="relative w-18 h-18 sm:w-24 sm:h-24 bg-gray-50 rounded-xl overflow-hidden shrink-0 border">
-                {item.image && <Image src={item.image} alt={item.title} fill className="object-cover" />}
+            <div
+              key={`${item.productId}-${item.variantId}`}
+              className="py-5 sm:py-6 flex gap-4 sm:gap-6 items-center"
+            >
+              {/* Product Thumbnail */}
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-stone-50 rounded-2xl overflow-hidden shrink-0 border border-stone-200 shadow-xs">
+                {item.image && (
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="96px"
+                    className="object-cover"
+                  />
+                )}
               </div>
 
+              {/* Product Info */}
               <div className="flex-1 min-w-0">
-                <span className="text-[11px] sm:text-xs font-bold text-primary">{item.brand}</span>
-                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
+                  {item.brand}
+                </span>
+                <h3 className="text-xs sm:text-sm font-bold text-stone-900 truncate hover:text-emerald-700 transition-colors">
                   <Link href={`/product/${item.slug}`}>{item.title}</Link>
                 </h3>
 
-                {/* Attributes (Size, Gender, Type) */}
+                {/* Sizing and Attributes */}
                 {item.attributes && (
-                  <div className="flex flex-wrap gap-1.5 mt-1">
+                  <div className="flex flex-wrap gap-1.5 mt-1.5">
                     {item.attributes.size && (
-                      <span className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-gray-100 text-gray-800">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/60 uppercase">
                         Size: {item.attributes.size.toUpperCase()}
                       </span>
                     )}
                     {item.attributes.gender && (
-                      <span className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-medium bg-gray-100 text-gray-800 capitalize">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-medium bg-stone-100 text-stone-700 capitalize">
                         {item.attributes.gender}
                       </span>
                     )}
                   </div>
                 )}
 
-                <div className="text-sm sm:text-base font-bold text-gray-900 mt-1.5 sm:mt-2">
+                <div className="text-sm sm:text-base font-extrabold text-stone-900 mt-2">
                   {formatBDT(item.price)}
                 </div>
               </div>
 
-              {/* Quantity Adjuster */}
-              <div className="flex items-center border rounded-xl p-1">
+              {/* Quantity Stepper */}
+              <div className="flex items-center border border-stone-200 rounded-xl p-1 bg-stone-50/80">
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
-                  className="p-1 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
+                  className="p-1 hover:bg-white rounded-lg text-stone-600 transition-colors"
+                  aria-label="Decrease quantity"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3.5 h-3.5" />
                 </button>
-                <span className="w-8 text-center text-xs font-bold">{item.quantity}</span>
+                <span className="w-8 text-center text-xs font-bold text-stone-900">
+                  {item.quantity}
+                </span>
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
                   disabled={item.quantity >= item.stockQuantity}
-                  className="p-1 hover:bg-gray-100 rounded-lg text-gray-600 disabled:opacity-30 transition-colors"
+                  className="p-1 hover:bg-white rounded-lg text-stone-600 disabled:opacity-30 transition-colors"
+                  aria-label="Increase quantity"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
 
+              {/* Line Total & Remove */}
               <div className="text-right">
-                <span className="text-sm sm:text-base font-bold text-primary block">
+                <span className="text-sm sm:text-base font-extrabold text-emerald-800 block">
                   {formatBDT(item.price * item.quantity)}
                 </span>
                 <button
+                  type="button"
                   onClick={() => removeItem(item.productId, item.variantId)}
-                  className="text-gray-400 hover:text-red-500 mt-1 p-1 transition-colors"
+                  className="text-stone-400 hover:text-rose-600 mt-1 p-1 rounded-md transition-colors"
+                  title="Remove item"
+                  aria-label="Remove item"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -192,33 +258,38 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* Order Summary (4 cols) */}
+        {/* ========================================================================= */}
+        {/* RIGHT: ORDER SUMMARY CARD (4 cols)                                        */}
+        {/* ========================================================================= */}
         <div className="lg:col-span-4">
-          <div className="bg-gray-50 border rounded-2xl p-6 space-y-5 sticky top-24">
-            <h3 className="text-base font-bold text-gray-900 border-b pb-3">Summary</h3>
+          <div className="bg-stone-50/80 border border-stone-200/80 rounded-3xl p-6 space-y-5 sticky top-24 shadow-card">
+            <h3 className="text-base font-bold uppercase tracking-wider text-stone-900 border-b border-stone-200 pb-3">
+              Order Summary
+            </h3>
 
-            {/* Promo Code Input or Applied Badge */}
+            {/* Promo Code Input or Active Badge */}
             <div className="pb-1">
               {appliedCoupon ? (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
                     <div>
-                      <span className="text-xs font-bold text-emerald-900 block">
-                        {appliedCoupon.code} applied
+                      <span className="text-xs font-bold text-emerald-950 block">
+                        {appliedCoupon.code} Applied
                       </span>
-                      <span className="text-[11px] text-emerald-700">
+                      <span className="text-[11px] text-emerald-800">
                         {appliedCoupon.discountType === "PERCENTAGE"
-                          ? `${appliedCoupon.discountValue}% discount`
-                          : `৳${appliedCoupon.discountValue} flat discount`}
+                          ? `${appliedCoupon.discountValue}% discount savings`
+                          : `৳${appliedCoupon.discountValue} flat savings`}
                       </span>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={removeCoupon}
-                    className="p-1 text-gray-400 hover:text-red-500 rounded-lg hover:bg-white transition-colors"
+                    className="p-1 text-stone-400 hover:text-rose-600 rounded-lg hover:bg-white transition-colors"
                     title="Remove coupon"
+                    aria-label="Remove coupon"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -226,19 +297,19 @@ export default function CartPage() {
               ) : (
                 <form onSubmit={handleApplyCoupon} className="flex gap-2">
                   <div className="relative flex-1">
-                    <Tag className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Tag className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
-                      placeholder="Enter promo code"
+                      placeholder="Promo Code"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                      className="w-full pl-9 pr-3 py-2 text-xs font-semibold uppercase bg-white border border-gray-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full pl-9 pr-3 py-2.5 text-xs font-bold uppercase bg-white border border-stone-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isApplying || !couponInput.trim()}
-                    className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-colors flex items-center gap-1 shrink-0"
+                    className="px-4 py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-colors flex items-center gap-1 shrink-0"
                   >
                     {isApplying && <Loader2 className="w-3 h-3 animate-spin" />}
                     Apply
@@ -247,46 +318,59 @@ export default function CartPage() {
               )}
             </div>
 
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between text-gray-600">
-                <span>Subtotal</span>
-                <span className="font-bold text-gray-900">{formatBDT(subtotal())}</span>
+            {/* Calculations Breakdown */}
+            <div className="space-y-2.5 text-xs border-t border-stone-200 pt-3">
+              <div className="flex justify-between text-stone-600">
+                <span>Items Subtotal</span>
+                <span className="font-bold text-stone-900">{formatBDT(currentSubtotal)}</span>
               </div>
 
-              {getDiscountAmount() > 0 && (
-                <div className="flex justify-between text-emerald-600 font-semibold">
+              {currentDiscount > 0 && (
+                <div className="flex justify-between text-rose-700 font-semibold">
                   <span className="flex items-center gap-1">
                     <Tag className="w-3.5 h-3.5" />
-                    Coupon Discount ({appliedCoupon?.code})
+                    Coupon Savings ({appliedCoupon?.code})
                   </span>
-                  <span>-{formatBDT(getDiscountAmount())}</span>
+                  <span>-{formatBDT(currentDiscount)}</span>
                 </div>
               )}
 
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-stone-600">
                 <span>Estimated Delivery</span>
-                <span>Inside Dhaka ৳60 • Outside ৳120</span>
+                <span className="text-right font-medium">Dhaka ৳60 • Outside ৳120</span>
               </div>
 
-              <div className="flex justify-between text-sm sm:text-base font-bold text-gray-900 pt-3 border-t">
-                <span>Estimated Total</span>
-                <span className="text-primary text-base sm:text-lg font-extrabold">
-                  {formatBDT(Math.max(0, subtotal() - getDiscountAmount()))}
+              <div className="flex justify-between text-sm sm:text-base font-bold text-stone-900 pt-3 border-t border-stone-200">
+                <span>Subtotal (Excl. Shipping)</span>
+                <span className="text-emerald-800 text-lg sm:text-xl font-extrabold">
+                  {formatBDT(calculatedTotal)}
                 </span>
               </div>
             </div>
 
+            {/* Proceed CTA */}
             <Link
               href="/checkout"
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all shadow-md shadow-primary/20"
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-emerald-700 text-white font-bold text-sm hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-700/20 active:scale-[0.99]"
             >
-              Proceed to Checkout
+              <span>Proceed to Checkout</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
-            <div className="pt-3 border-t flex items-center gap-2 text-[11px] text-gray-500">
-              <Truck className="w-4 h-4 text-primary shrink-0" />
-              <span>Flat shipping: Dhaka ৳60 (24-48h), Outside ৳120 (3-5d)</span>
+            {/* Bangladeshi Logistics Reassurance */}
+            <div className="pt-3 border-t border-stone-200 space-y-2 text-[11px] text-stone-600">
+              <div className="flex items-center gap-2">
+                <Truck className="w-4 h-4 text-emerald-700 shrink-0" />
+                <span>Flat rate delivery: Inside Dhaka ৳60 | Outside ৳120</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                <span>Nationwide Cash on Delivery (COD) & Stripe Secure Card</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <RotateCcw className="w-4 h-4 text-emerald-700 shrink-0" />
+                <span>7-Day Easy Return Policy across Bangladesh</span>
+              </div>
             </div>
           </div>
         </div>

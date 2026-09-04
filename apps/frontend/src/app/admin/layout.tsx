@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Star,
   Ticket,
+  Sparkles,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -58,10 +59,10 @@ export default function AdminLayout({
 
   if (!mounted || !isAuthenticated || (user?.role !== "ADMIN" && user?.role !== "SUPER_ADMIN")) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold text-gray-600">Verifying administrator privileges...</p>
+          <div className="w-10 h-10 border-3 border-emerald-700 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-semibold text-stone-600">Verifying administrator credentials...</p>
         </div>
       </div>
     );
@@ -73,16 +74,18 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-stone-100/70 flex flex-col">
       {/* DESKTOP FIXED SIDEBAR */}
-      <aside className="hidden lg:flex flex-col w-64 bg-gray-900 text-gray-200 border-r border-gray-800 fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex flex-col w-64 bg-stone-900 text-stone-200 border-r border-stone-800 fixed inset-y-0 left-0 z-30 shadow-xl">
         {/* Brand */}
-        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-gray-800">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold shadow-xs">
-            ৳
+        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-stone-800">
+          <div className="w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-black text-lg shadow-sm">
+            ব
           </div>
           <div>
-            <span className="font-extrabold text-white text-base tracking-tight">BanglaCart</span>
+            <span className="font-display font-extrabold text-white text-base tracking-tight">
+              BanglaShop
+            </span>
             <span className="block text-[10px] uppercase font-bold tracking-widest text-emerald-400">
               Admin Portal
             </span>
@@ -90,7 +93,7 @@ export default function AdminLayout({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto scrollbar-thin">
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.href === "/admin"
@@ -101,25 +104,25 @@ export default function AdminLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                   isActive
-                    ? "bg-emerald-600 text-white shadow-xs"
-                    : "text-gray-400 hover:text-white hover:bg-gray-800"
+                    ? "bg-emerald-700 text-white shadow-md shadow-emerald-700/20"
+                    : "text-stone-400 hover:text-white hover:bg-stone-800/80"
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-400"}`} />
-                {item.name}
+                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-stone-400"}`} />
+                <span>{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-gray-800 space-y-2">
+        <div className="p-4 border-t border-stone-800 space-y-2">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-bold text-stone-400 hover:text-white hover:bg-stone-800 transition-colors"
           >
             <div className="flex items-center gap-2">
               <Store className="w-4 h-4 text-emerald-400" />
@@ -129,8 +132,9 @@ export default function AdminLayout({
           </Link>
 
           <button
+            type="button"
             onClick={handleLogout}
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-950/40 transition-colors"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-950/40 transition-colors"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
@@ -142,20 +146,22 @@ export default function AdminLayout({
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs"
+            className="fixed inset-0 bg-stone-950/60 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 bg-gray-900 text-gray-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-left duration-200">
-            <div className="h-16 flex items-center justify-between px-6 border-b border-gray-800">
+          <div className="fixed inset-y-0 left-0 w-72 bg-stone-900 text-stone-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-left duration-200">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-stone-800">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-                  ৳
+                <div className="w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-black text-lg">
+                  ব
                 </div>
-                <span className="font-bold text-white">BanglaCart Admin</span>
+                <span className="font-display font-bold text-white text-base">BanglaShop Admin</span>
               </div>
               <button
+                type="button"
                 onClick={() => setMobileOpen(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-white"
+                className="p-1 rounded-lg text-stone-400 hover:text-white"
+                aria-label="Close navigation menu"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -173,31 +179,32 @@ export default function AdminLayout({
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                       isActive
-                        ? "bg-emerald-600 text-white shadow-xs"
-                        : "text-gray-400 hover:text-white hover:bg-gray-800"
+                        ? "bg-emerald-700 text-white shadow-xs"
+                        : "text-stone-400 hover:text-white hover:bg-stone-800"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
-                    {item.name}
+                    <span>{item.name}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="p-4 border-t border-gray-800 space-y-2">
+            <div className="p-4 border-t border-stone-800 space-y-2">
               <Link
                 href="/"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-white"
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-bold text-stone-400 hover:text-white"
               >
                 <Store className="w-4 h-4 text-emerald-400" />
                 <span>Storefront</span>
               </Link>
               <button
+                type="button"
                 onClick={handleLogout}
-                className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-950/40"
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-950/40"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>
@@ -207,21 +214,22 @@ export default function AdminLayout({
         </div>
       )}
 
-      {/* MAIN CONTENT AREA (Padded by lg:pl-64 for fixed sidebar) */}
+      {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64 min-h-screen">
-        {/* Top bar (Sticky) */}
-        <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 shadow-2xs">
+        {/* Top Sticky Bar */}
+        <header className="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur-md border-b border-stone-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 shadow-2xs">
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100"
+              className="lg:hidden p-2 rounded-xl text-stone-600 hover:bg-stone-100"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h1 className="text-base sm:text-lg font-bold text-gray-900 capitalize">
+            <h1 className="text-base sm:text-lg font-display font-bold text-stone-900 capitalize">
               {pathname === "/admin"
-                ? "Executive Analytics"
+                ? "Executive Operations"
                 : pathname.split("/admin/")[1]?.replace(/-/g, " ") || "Admin Portal"}
             </h1>
           </div>
@@ -229,12 +237,12 @@ export default function AdminLayout({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-right">
               <div className="hidden sm:block">
-                <p className="text-xs font-bold text-gray-900">{user?.name}</p>
-                <p className="text-[11px] text-gray-500">{user?.email}</p>
+                <p className="text-xs font-bold text-stone-900">{user?.name}</p>
+                <p className="text-[11px] text-stone-500">{user?.email}</p>
               </div>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                <ShieldCheck className="w-3 h-3" />
-                {user?.role}
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                <ShieldCheck className="w-3 h-3 text-emerald-700" />
+                <span>{user?.role}</span>
               </span>
             </div>
           </div>

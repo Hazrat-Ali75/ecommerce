@@ -63,25 +63,44 @@ export function Header() {
               )}
             </button>
 
-            {/* Logo */}
-            <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-primary flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-xs">
+            {/* Logo & Category Navigation */}
+            <div className="flex items-center gap-4 lg:gap-6 shrink-0">
+              <Link href="/" className="flex items-center gap-2.5 group">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-emerald-800 to-primary flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-xs group-hover:scale-105 transition-transform">
                   ব
                 </div>
                 <span className="text-lg sm:text-xl font-black tracking-tight text-gray-900">
-                  Bangla<span className="text-primary">Cart</span>
+                  Bangla<span className="text-primary font-black">Shop</span>
                 </span>
               </Link>
 
-              {/* Shop Link */}
-              <Link
-                href="/shop"
-                className="hidden md:inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-gray-700 hover:text-primary transition-colors py-1.5 px-3 rounded-xl hover:bg-gray-50"
-              >
-                <Compass className="w-4 h-4 text-primary" />
-                Shop All
-              </Link>
+              {/* Desktop Category Navigation */}
+              <nav className="hidden lg:flex items-center gap-1">
+                <Link
+                  href="/shop"
+                  className="text-xs font-bold text-gray-700 hover:text-primary transition-colors py-1.5 px-2.5 rounded-lg hover:bg-emerald-50/60"
+                >
+                  All Products
+                </Link>
+                <Link
+                  href="/shop?category=fashion-apparel"
+                  className="text-xs font-semibold text-gray-600 hover:text-primary transition-colors py-1.5 px-2.5 rounded-lg hover:bg-emerald-50/60"
+                >
+                  Fashion
+                </Link>
+                <Link
+                  href="/shop?category=footwear-sneakers"
+                  className="text-xs font-semibold text-gray-600 hover:text-primary transition-colors py-1.5 px-2.5 rounded-lg hover:bg-emerald-50/60"
+                >
+                  Footwear
+                </Link>
+                <Link
+                  href="/shop?category=electronics-gadgets"
+                  className="text-xs font-semibold text-gray-600 hover:text-primary transition-colors py-1.5 px-2.5 rounded-lg hover:bg-emerald-50/60"
+                >
+                  Gadgets
+                </Link>
+              </nav>
             </div>
 
             {/* Centered Search Bar (Desktop & Tablet) */}
@@ -276,18 +295,6 @@ export function Header() {
                     <span className="text-xs font-bold text-gray-400">
                       ({mounted ? totalItems() : 0})
                     </span>
-                  </Link>
-
-                  <Link
-                    href="/track"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-sm font-bold text-gray-800 border border-gray-100"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Truck className="w-5 h-5 text-primary" />
-                      <span>Track Your Order</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
                   </Link>
                 </nav>
 

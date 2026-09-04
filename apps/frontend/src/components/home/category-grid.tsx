@@ -31,47 +31,53 @@ export function CategoryGrid() {
   ];
 
   return (
-    <section className="py-12">
-      <div className="flex items-end justify-between mb-6 gap-2">
-        <div className="min-w-0 flex-1">
-          <h2 className="text-sm sm:text-lg md:text-xl font-extrabold text-gray-900 tracking-tight truncate">
-            Explore Categories
+    <section className="py-6">
+      <div className="flex items-end justify-between mb-6 gap-2 border-b pb-4">
+        <div>
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary block mb-1">
+            Curated Bangladeshi Collections
+          </span>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+            Shop by Category
           </h2>
         </div>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-primary hover:underline shrink-0 pb-0.5 whitespace-nowrap"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-emerald-700 transition-colors pb-1 group"
         >
-          <span>View All</span>
-          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          <span>View All Products</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
         {categories.map((cat) => (
           <Link
             key={cat.slug}
             href={`/shop?category=${cat.slug}`}
-            className="group relative h-80 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+            className="group relative h-80 sm:h-96 rounded-3xl overflow-hidden shadow-xs hover:shadow-card-hover transition-all duration-500 border border-gray-100"
           >
             <Image
               src={cat.image}
               alt={cat.title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/40 to-transparent" />
 
-            <div className="absolute inset-0 p-6 flex flex-col justify-end">
-              <span className="text-[11px] font-bold tracking-wider uppercase text-secondary mb-1">
+            <div className="absolute inset-0 p-6 sm:p-7 flex flex-col justify-end">
+              <span className="inline-block w-fit px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-emerald-300 text-[10px] font-bold uppercase tracking-wider mb-2">
                 {cat.tag}
               </span>
-              <h3 className="text-xl font-bold text-white mb-1">{cat.title}</h3>
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-1.5 group-hover:text-emerald-300 transition-colors">
+                {cat.title}
+              </h3>
               <p className="text-xs text-gray-300 mb-4">{cat.subtitle}</p>
 
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-white bg-white/20 backdrop-blur-md px-3.5 py-2 rounded-lg w-fit group-hover:bg-primary transition-colors">
-                Explore Now
-                <ArrowRight className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-white bg-white/20 backdrop-blur-md px-4 py-2.5 rounded-xl w-fit group-hover:bg-primary group-hover:text-white transition-all shadow-xs">
+                <span>Explore Collection</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </Link>
