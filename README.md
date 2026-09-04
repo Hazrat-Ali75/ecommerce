@@ -87,37 +87,7 @@
 | **Cloudinary** | Cloud asset management with primary image preservation |
 | **Resend** | Transactional email delivery for orders, tracking, and password reset |
 
----
 
-## 📐 Bangladeshi Business Rules
-
-To guarantee catalog integrity and business conformity, the codebase adheres to strict domain invariants:
-
-```mermaid
-flowchart TD
-    A[Catalog Filter /shop] -->|Forbidden| B(Size Filtering)
-    A -->|Permitted| C[Category, Gender, Brand, Price Slider]
-    
-    D[Product Details Page] -->|Mandatory| E[Size Pills: S, M, L, XL, XXL or 5-10]
-    E -->|Live Check| F{Stock > 0?}
-    F -->|Yes| G[Permit Add to Cart]
-    F -->|No| H[Disable Pill & Show Out of Stock]
-    
-    I[Checkout Logistics] -->|Inside Dhaka| J[Flat ৳60 Delivery Fee]
-    I -->|Outside Dhaka| K[Flat ৳120 Delivery Fee across 64 Districts]
-```
-
-1. **Category & Variation Limits**:
-   - **Fashion & Apparel**: `gender` (`men`, `women`, `kids`), `size` (`s`, `m`, `l`, `xl`, `xxl` on PDP only), `brand`.
-   - **Footwear & Sneakers**: `gender` (`men`, `women`, `kids`), `size` (`5`, `6`, `7`, `8`, `9`, `10` on PDP only), `brand`.
-   - **Electronics & Gadgets**: `type` (`watch`, `charger`, `power bank`, `earbuds`), `brand`. Watches feature a target gender edition.
-2. **Catalog vs. PDP Sizing Separation**:
-   - **NEVER** include `size` in catalog sidebar filters (`/shop`). Sizing is exclusively chosen on the Product Details Page.
-3. **Currency & Logistics Invariants**:
-   - Prices are formatted as `৳1,250` (Bangladeshi Taka symbol `৳`).
-   - Flat delivery rates: **৳60 Inside Dhaka** vs. **৳120 Outside Dhaka**.
-
----
 
 ## 📂 Repository Structure
 
