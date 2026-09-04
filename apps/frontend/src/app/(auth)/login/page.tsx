@@ -151,11 +151,6 @@ function LoginContent() {
             Create BanglaShop account
           </Link>
         </div>
-
-        <div className="pt-1 flex items-center justify-center gap-1.5 text-[11px] text-stone-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-          <span>Protected with secure 256-bit token encryption</span>
-        </div>
       </div>
     </div>
   );

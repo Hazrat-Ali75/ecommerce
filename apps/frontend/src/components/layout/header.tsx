@@ -236,12 +236,6 @@ export function Header() {
                   >
                     Sign In
                   </Link>
-                  <Link
-                    href="/register"
-                    className="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-colors shadow-xs"
-                  >
-                    Register
-                  </Link>
                 </div>
               )}
             </div>
@@ -308,13 +302,6 @@ export function Header() {
                         className="py-2.5 px-3 bg-gray-100 text-gray-800 text-xs font-bold rounded-xl text-center hover:bg-gray-200"
                       >
                         Sign In
-                      </Link>
-                      <Link
-                        href="/register"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="py-2.5 px-3 bg-primary text-white text-xs font-bold rounded-xl text-center shadow-xs hover:bg-primary/90"
-                      >
-                        Register
                       </Link>
                     </div>
                   ) : (
