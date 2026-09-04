@@ -18,7 +18,7 @@ interface ProductItem {
   variants: Array<{ stockQuantity: number }>;
 }
 async function getHomeData() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://ecommerce-vv71.onrender.com/api/v1";
   try {
     const [fashionRes, footwearRes, electronicsRes, bannersRes] = await Promise.allSettled([
       fetch(`${apiUrl}/products?categorySlug=fashion-apparel&isFeatured=true&limit=4`, { next: { revalidate: 60 } }),
