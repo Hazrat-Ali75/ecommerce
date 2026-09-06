@@ -20,8 +20,8 @@ function LoginContent() {
   const syncCart = useCartStore((state) => state.syncWithBackend);
   const syncWishlist = useWishlistStore((state) => state.syncWithBackend);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@marketplace.com");
+  const [password, setPassword] = useState("Admin123456!");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
